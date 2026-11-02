@@ -1,0 +1,1110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kickoff Docs</title>
+<meta name="description" content="Make or convert PDF, Word, Excel, PowerPoint, CSV and Markdown files in one click. Works offline.">
+<meta name="theme-color" content="#2a0709">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kickoff Docs">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>
+@font-face{font-family:"Saira Condensed";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/saira-condensed-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Saira Condensed";font-style:normal;font-weight:800;font-display:swap;src:url(fonts/saira-condensed-latin-800-normal.woff2) format("woff2")}
+@font-face{font-family:"Barlow";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/barlow-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Barlow";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/barlow-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Barlow";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/barlow-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/ibm-plex-mono-latin-500-normal.woff2) format("woff2")}
+/* Layout: the pitch on the left with the ball on the centre spot; the kit bag (form) on the right. Stacks on phones.
+   Palette: Spain, 2026 world champions. La Roja red and gold. */
+:root{
+  --pitch:#2a0709;        /* page ground, deep la Roja red */
+  --pitch-2:#360a0d;      /* mowed stripe */
+  --surface:#1e0406;      /* panel */
+  --line:#5e1c20;         /* hairlines */
+  --gold:#ffc400;         /* accent (scheme) */
+  --accent-ink:#2a0709;   /* text on accent */
+  --stage-line:rgba(255,196,0,.28);
+  --glow:rgba(255,214,120,.14);
+  --modes-bg:rgba(30,4,6,.72);
+  --drop-over:#3a0b0e;
+  --ok:#ffc400; --err:#ff9d8f;
+  --flag:linear-gradient(#c60b1e 0 25%,#ffc400 25% 75%,#c60b1e 75%);
+  --chalk:#fbf3e4;        /* text, chalk lines */
+  --muted:#d8b8a6;        /* secondary text */
+  --pick:#e2463b;         /* set from the picked format */
+  --pick-ink:#ffffff;
+  --display:"Saira Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--pitch);color:var(--chalk);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+.wrap{max-width:1180px;margin:0 auto;padding-block:20px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,5vw,44px);line-height:1;letter-spacing:.01em;text-transform:uppercase;margin:0;text-wrap:balance}
+h1 span{color:var(--gold)}
+.champ{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0 0 6px}
+.schemes{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0}
+.schemes > span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:2px}
+.scheme{display:inline-flex;align-items:center;gap:7px;font:inherit;font-size:14px;font-weight:500;color:var(--chalk);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px 5px 6px;cursor:pointer}
+.scheme i{width:20px;height:20px;border-radius:50%;background:var(--sw);box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+.scheme[aria-pressed="true"]{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+.scheme{flex:none}
+@media (max-width:640px){.schemes{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.schemes::-webkit-scrollbar{display:none}}
+.champ i{display:inline-block;width:22px;height:14px;border-radius:2px;background:var(--flag)}
+.tag{color:var(--muted);margin:0;font-size:14px;max-width:46ch}
+.grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Pitch stage */
+.stage{position:relative;border-radius:14px;overflow:hidden;height:clamp(340px,56vw,560px);
+  background:repeating-linear-gradient(90deg,var(--pitch) 0 12.5%,var(--pitch-2) 12.5% 25%);
+  border:1px solid var(--line);touch-action:none;user-select:none;-webkit-user-select:none}
+@media (max-width:860px){.stage{height:clamp(320px,88vw,460px)}}
+.stage::before{content:"";position:absolute;left:50%;top:50%;width:min(78%,420px);aspect-ratio:1;max-width:100%;transform:translate(-50%,-50%);border:2px solid var(--stage-line);border-radius:50%}
+.stage::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--stage-line);opacity:.75;transform:translateX(-1px)}
+.glow{position:absolute;inset:0;background:radial-gradient(60% 50% at 50% 42%,var(--glow),transparent 70%);pointer-events:none}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:2;cursor:grab}
+canvas:active{cursor:grabbing}
+.shadow{position:absolute;left:0;top:0;width:40%;height:6%;background:radial-gradient(closest-side,rgba(0,0,0,.55),transparent);z-index:1;pointer-events:none}
+.labels{position:absolute;inset:0;z-index:3;pointer-events:none}
+.lbl{position:absolute;left:0;top:0;font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.06em;color:#fff;background:none;border:0;padding:6px 8px;text-shadow:0 1px 2px rgba(0,0,0,.6);cursor:pointer;will-change:transform,opacity}
+.hint{position:absolute;left:12px;bottom:10px;z-index:4;font-size:12px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;pointer-events:none}
+.modes{position:absolute;left:max(12px,env(safe-area-inset-left,0px));top:12px;z-index:4;display:flex;padding:3px;border-radius:999px;background:var(--modes-bg);border:1px solid var(--line)}
+.modes button{font:inherit;font-family:var(--display);font-weight:800;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:none;border:0;border-radius:999px;padding:6px 14px;cursor:pointer}
+.modes button[aria-pressed="true"]{background:var(--gold);color:var(--accent-ink)}
+.kick{position:absolute;right:max(12px,env(safe-area-inset-right,0px));bottom:10px;z-index:4;font-family:var(--display);font-weight:800;font-size:17px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink);background:var(--gold);border:0;border-radius:999px;padding:9px 18px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.kick:hover{filter:brightness(1.08)}
+.kick:active{transform:translateY(1px)}
+
+/* format chips */
+.chips{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:10px}
+@media (max-width:520px){.chips{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.chip{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--chalk);cursor:pointer;text-align:left;font:inherit;min-width:0}
+.chip b{font-family:var(--display);font-weight:800;font-size:17px;letter-spacing:.04em;display:flex;align-items:center;gap:6px}
+.chip b i{width:10px;height:10px;border-radius:50%;background:var(--c);display:inline-block}
+.chip small{color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.chip[aria-pressed="true"]{border-color:var(--c);box-shadow:inset 0 0 0 1px var(--c)}
+
+/* panel */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.picked{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+.picked h2{font-family:var(--display);font-weight:800;font-size:30px;line-height:1.05;margin:2px 0 0;text-transform:uppercase;letter-spacing:.02em}
+.ext{font-family:var(--mono);font-size:13px;padding:4px 10px;border-radius:999px;background:var(--pick);color:var(--pick-ink);transition:background .4s}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:420px){.row{grid-template-columns:1fr}}
+label{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--muted);font-weight:500;min-width:0}
+input,textarea{font:inherit;font-size:16px;color:var(--chalk);background:var(--pitch);border:1px solid var(--line);border-radius:9px;padding:9px 11px;width:100%;min-width:0}
+textarea{min-height:230px;resize:vertical;font-family:var(--mono);font-size:13.5px;line-height:1.55}
+input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--pick);outline-offset:2px}
+.help{font-size:12.5px;color:var(--muted);margin:-6px 0 0}
+.help code{font-family:var(--mono);color:var(--chalk);background:var(--pitch);padding:0 4px;border-radius:4px}
+.make{font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:.05em;text-transform:uppercase;color:var(--pick-ink);background:var(--pick);border:0;border-radius:12px;padding:14px 18px;cursor:pointer;transition:background .4s,transform .1s;display:flex;align-items:center;justify-content:center;gap:10px}
+.make:hover{filter:brightness(1.08)}
+.make:active{transform:translateY(1px)}
+.make[disabled]{opacity:.7;cursor:progress}
+.status{min-height:1.5em;font-size:14px;margin:-4px 0 0;color:var(--muted)}
+.drop{display:flex;align-items:center;gap:12px;padding:12px;border:1.5px dashed var(--line);border-radius:12px;background:var(--pitch);transition:border-color .2s,background .2s;min-width:0}
+.drop.over{border-color:var(--gold);background:var(--drop-over)}
+.drop.loaded{border-style:solid;border-color:var(--gold)}
+.drop.busy{opacity:.7}
+.drop .ico{flex:none;width:38px;height:46px;border-radius:5px;background:var(--chalk);position:relative;clip-path:polygon(0 0,70% 0,100% 24%,100% 100%,0 100%)}
+.drop .ico::after{content:"";position:absolute;right:0;top:0;width:30%;height:24%;background:var(--gold)}
+.drop .txt{flex:1;min-width:0;display:flex;flex-direction:column}
+.drop .txt b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.drop .txt small{color:var(--muted);font-size:12.5px}
+.pickfile{position:relative;flex:none;font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink);background:var(--gold);border-radius:999px;padding:8px 14px;cursor:pointer}
+.pickfile input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.pickfile:focus-within{outline:2px solid var(--chalk);outline-offset:2px}
+.clearfile{flex:none;font:inherit;font-size:13px;color:var(--muted);background:none;border:0;text-decoration:underline;cursor:pointer;padding:4px}
+.drop:not(.loaded) .clearfile{display:none}
+select{font:inherit;font-size:16px;color:var(--chalk);background:var(--pitch);border:1px solid var(--line);border-radius:9px;padding:9px 11px;width:100%;min-width:0}
+.fontrow{display:grid;grid-template-columns:1.4fr 1fr;gap:8px 10px;min-width:0}
+.fontrow .preview{grid-column:1/-1;margin:0;padding:10px 12px;border-radius:9px;background:#ffffff;color:#1b1b1b;box-shadow:inset 0 0 0 1px var(--line);font-size:18px;line-height:1.3;overflow-wrap:anywhere}
+.fontrow .fontnote{grid-column:1/-1;margin:-2px 0 0;font-size:12.5px;color:var(--muted)}
+.fontrow.off label,.fontrow.off .preview{opacity:.45}
+.steps{display:flex;gap:6px 14px;flex-wrap:wrap;margin:0;padding:0;list-style:none;font-size:12.5px;color:var(--muted)}
+.steps li b{color:var(--gold);font-family:var(--display);font-weight:800;margin-right:4px}
+@media (max-width:420px){.drop{flex-wrap:wrap}.drop .txt{flex-basis:calc(100% - 50px)}}
+.status.ok{color:var(--ok)}.status.err{color:var(--err)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div><p class="champ"><i></i><span id="champText">Spain · 2026 world champions</span></p><h1>Kickoff <span>Docs</span></h1></div>
+    <p class="tag">Write something or open a file, spin the ball to pick PDF, Word, Excel or PowerPoint, and make it in one click.</p>
+  </header>
+
+  <div class="schemes" id="schemes" role="group" aria-label="Colour scheme"><span>Colours</span></div>
+
+  <div class="grid">
+    <section aria-label="Pick a format">
+      <div class="stage" id="stage">
+        <div class="glow"></div>
+        <div class="shadow" id="shadow"></div>
+        <canvas id="ball" aria-label="3D football. Drag to spin, tap a coloured panel to pick a format."></canvas>
+        <div class="labels" id="labels" aria-hidden="true"></div>
+        <div class="modes" role="group" aria-label="What dragging does"><button type="button" data-m="move" aria-pressed="true">Move</button><button type="button" data-m="spin" aria-pressed="false">Spin</button></div>
+        <div class="hint" id="hint">Drag to move · tap a panel</div>
+        <button class="kick" id="kick" type="button">Kick</button>
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Formats"></div>
+    </section>
+
+    <form class="panel" id="form" autocomplete="off">
+      <div class="picked">
+        <div>
+          <p class="eyebrow">Picked format</p>
+          <h2 id="pickName">PDF document</h2>
+        </div>
+        <span class="ext" id="pickExt">.pdf</span>
+      </div>
+      <ol class="steps"><li><b>1</b>Choose a file or write below</li><li><b>2</b>Pick a format on the ball</li><li><b>3</b>Make it</li></ol>
+      <div class="drop" id="drop">
+        <span class="ico" aria-hidden="true"></span>
+        <span class="txt"><b id="srcName">No file chosen</b><small id="srcMeta">PDF, Word, Excel, PowerPoint, CSV, text, Markdown, HTML</small></span>
+        <button class="clearfile" id="clearFile" type="button">Clear</button>
+        <label class="pickfile" for="file">Choose file<input id="file" type="file" accept=".pdf,.docx,.xlsx,.xls,.xlsm,.ods,.pptx,.csv,.tsv,.txt,.md,.markdown,.html,.htm,.json,text/plain,text/csv,application/pdf"></label>
+      </div>
+      <div class="row">
+        <label for="title">Title<input id="title" value="Riverside Rovers: Spring Season Review"></label>
+        <label for="author">Author<input id="author" value="Coach M. Okafor"></label>
+      </div>
+      <div class="fontrow" id="fontRow">
+        <label for="font">Font
+          <select id="font">
+            <option value="Calibri|helvetica">Calibri</option>
+            <option value="Arial|helvetica">Arial</option>
+            <option value="Verdana|helvetica">Verdana</option>
+            <option value="Trebuchet MS|helvetica">Trebuchet MS</option>
+            <option value="Georgia|times">Georgia</option>
+            <option value="Times New Roman|times">Times New Roman</option>
+            <option value="Garamond|times">Garamond</option>
+            <option value="Cambria|times">Cambria</option>
+            <option value="Courier New|courier">Courier New</option>
+            <option value="Consolas|courier">Consolas</option>
+          </select>
+        </label>
+        <label for="size">Text size
+          <select id="size">
+            <option value="0.9">Small</option>
+            <option value="1" selected>Normal</option>
+            <option value="1.2">Large</option>
+            <option value="1.4">Extra large</option>
+          </select>
+        </label>
+        <p class="preview" id="fontPreview">Aa · Ana Ruiz scored 14 goals this season.</p>
+        <p class="fontnote" id="fontNote"></p>
+      </div>
+      <label for="fname">File name<input id="fname" placeholder="riverside-rovers-spring-season-review"></label>
+      <label for="body">Content
+        <textarea id="body" spellcheck="true"># Season at a glance
+We finished 2nd in the Sunday League Division 2 with 13 wins, 3 draws and 2 losses from 18 matches.
+- Promotion secured with two games to spare
+- Best defensive record in the division: 14 goals conceded
+- Youth players made 41 appearances
+
+# Top scorers
+Player | Matches | Goals | Assists
+Ana Ruiz | 18 | 14 | 6
+Sam Patel | 17 | 9 | 8
+Leo Grant | 15 | 7 | 3
+Mia Osei | 18 | 4 | 11
+
+# Plans for autumn
+- Second training night on Thursdays from September
+- New away kit ordered, arriving August
+- Pre-season friendly vs. Harbour FC on 23 August</textarea>
+      </label>
+      <p class="help">Start a line with <code>#</code> for a heading, <code>-</code> for a bullet, and put <code>|</code> between table cells. Tables become sheets in Excel and slides in PowerPoint.</p>
+      <button class="make" id="make" type="submit">Make PDF</button>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</div>
+
+<script src="libs/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+const FORMATS = {
+  pdf:  {label:"PDF",  name:"PDF document",    ext:"pdf",  color:"#e2463b", ink:"#fff", lib:"libs/jspdf.umd.min.js", ready:()=>window.jspdf},
+  docx: {label:"DOCX", name:"Word document",   ext:"docx", color:"#2f6fe0", ink:"#fff", lib:"libs/docx.umd.js", ready:()=>window.docx},
+  xlsx: {label:"XLSX", name:"Excel sheet",     ext:"xlsx", color:"#1f9d55", ink:"#fff", lib:"libs/xlsx.full.min.js", ready:()=>window.XLSX},
+  pptx: {label:"PPTX", name:"PowerPoint deck", ext:"pptx", color:"#ee7a2a", ink:"#1a0d03", lib:"libs/pptxgen.bundle.js", ready:()=>window.PptxGenJS},
+  csv:  {label:"CSV",  name:"CSV table",       ext:"csv",  color:"#19b0b0", ink:"#03201f"},
+  md:   {label:"MD",   name:"Markdown note",   ext:"md",   color:"#9a6cf5", ink:"#fff"}
+};
+const KEYS = Object.keys(FORMATS);
+const $ = id => document.getElementById(id);
+const reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- library loading (on demand) ---------- */
+const libCache = {};
+function loadLib(key){
+  const f = FORMATS[key];
+  if(!f.lib || f.ready()) return Promise.resolve();
+  if(libCache[key]) return libCache[key];
+  libCache[key] = new Promise((res, rej)=>{
+    const s = document.createElement("script");
+    s.src = f.lib; s.async = true;
+    s.onload = ()=> f.ready() ? res() : rej(new Error("library did not start"));
+    s.onerror = ()=>{ delete libCache[key]; rej(new Error("could not load the "+f.label+" library. Check your connection and try again.")); };
+    document.head.appendChild(s);
+  });
+  return libCache[key];
+}
+
+/* ---------- colour schemes ---------- */
+const SCHEMES = {
+  spain: {name:"Spain", badge:"Spain · 2026 world champions", sw:"linear-gradient(#c60b1e 0 30%,#ffc400 30% 70%,#c60b1e 70%)", dark:true,
+    ui:{pitch:"#2a0709","pitch-2":"#360a0d",surface:"#1e0406",line:"#5e1c20",chalk:"#fbf3e4",muted:"#d8b8a6",gold:"#ffc400","accent-ink":"#2a0709","stage-line":"rgba(255,196,0,.28)",glow:"rgba(255,214,120,.14)","modes-bg":"rgba(30,4,6,.72)","drop-over":"#3a0b0e",ok:"#ffc400",err:"#ff9d8f",flag:"linear-gradient(#c60b1e 0 25%,#ffc400 25% 75%,#c60b1e 75%)"},
+    ball:[[1.0,0.78,0.25],[0.12,0.03,0.04],[0.98,0.95,0.88]],
+    doc:{h:"8E0C17",rule:"C60B1E",acc:"FFC400",fill:"FFF0C4",border:"E6CFB0",slideBg:"8E0C17",slideText:"FBF3E4",slideSub:"FFD9A0"}},
+  calm: {name:"Calm", badge:"Calm · soft sky and mist", sw:"linear-gradient(135deg,#a9c6e0,#d9d4ec)", dark:false,
+    ui:{pitch:"#eef2f6","pitch-2":"#e7ecf2",surface:"#ffffff",line:"#d3dce6",chalk:"#1f2a37",muted:"#5f6e80",gold:"#4f7fa8","accent-ink":"#ffffff","stage-line":"rgba(79,127,168,.30)",glow:"rgba(255,255,255,.6)","modes-bg":"rgba(255,255,255,.85)","drop-over":"#e3edf7",ok:"#2f6d4f",err:"#b3402f",flag:"linear-gradient(90deg,#a9c6e0 0 50%,#d9d4ec 50%)"},
+    ball:[[0.65,0.78,0.95],[0.25,0.32,0.42],[0.97,0.98,1.0]],
+    doc:{h:"3E6A93",rule:"4F7FA8",acc:"A9C6E0",fill:"E8F0F8",border:"CBD8E6",slideBg:"3E6A93",slideText:"FFFFFF",slideSub:"D7E5F2"}},
+  nature: {name:"Nature", badge:"Nature · moss and wheat", sw:"linear-gradient(135deg,#6a8f3a,#c8a052)", dark:false,
+    ui:{pitch:"#eceadb","pitch-2":"#e4e2d0",surface:"#f8f7ef",line:"#d2d2bb",chalk:"#2d3824",muted:"#68705a",gold:"#5f8434","accent-ink":"#ffffff","stage-line":"rgba(95,132,52,.32)",glow:"rgba(255,250,225,.55)","modes-bg":"rgba(248,247,239,.88)","drop-over":"#e4ead2",ok:"#4c6e26",err:"#a8452c",flag:"linear-gradient(90deg,#6a8f3a 0 50%,#c8a052 50%)"},
+    ball:[[0.95,0.85,0.55],[0.18,0.22,0.12],[0.97,0.96,0.9]],
+    doc:{h:"4E6B2A",rule:"6A8F3A",acc:"C8A052",fill:"EEF0DD",border:"D3D7BC",slideBg:"4E6B2A",slideText:"FFFFFF",slideSub:"E9DDB8"}},
+  jungle: {name:"Jungle", badge:"Jungle · canopy and toucan", sw:"linear-gradient(135deg,#123d22,#2fbf71 60%,#f2a71b 60%)", dark:true,
+    ui:{pitch:"#0f2416","pitch-2":"#132c1b",surface:"#0a1b10",line:"#2b4a33",chalk:"#eef4e6",muted:"#a9bea6",gold:"#f2a71b","accent-ink":"#1a1003","stage-line":"rgba(47,191,113,.28)",glow:"rgba(150,255,170,.10)","modes-bg":"rgba(8,22,13,.75)","drop-over":"#183a23",ok:"#7fe0a5",err:"#ff9d8f",flag:"linear-gradient(90deg,#2fbf71 0 50%,#f2a71b 50%)"},
+    ball:[[0.45,1.0,0.6],[0.04,0.1,0.05],[0.96,0.97,0.9]],
+    doc:{h:"1F5130",rule:"2FBF71",acc:"F2A71B",fill:"FDEFD2",border:"D9E3D0",slideBg:"1F5130",slideText:"EEF4E6",slideSub:"F7D58F"}},
+  australia: {name:"Australia", badge:"Australia · green and gold", sw:"linear-gradient(135deg,#00843d 50%,#ffcd00 50%)", dark:true,
+    ui:{pitch:"#062a1b","pitch-2":"#083322",surface:"#041d13",line:"#1f5038",chalk:"#fff8e1",muted:"#c4d3bc",gold:"#ffcd00","accent-ink":"#06281a","stage-line":"rgba(255,205,0,.26)",glow:"rgba(255,230,140,.12)","modes-bg":"rgba(4,24,15,.75)","drop-over":"#0d3a26",ok:"#ffcd00",err:"#ff9d8f",flag:"linear-gradient(90deg,#00843d 0 50%,#ffcd00 50%)"},
+    ball:[[1.0,0.85,0.2],[0.02,0.12,0.07],[0.99,0.97,0.88]],
+    doc:{h:"00843D",rule:"00843D",acc:"FFCD00",fill:"FFF5C2",border:"D8E2C8",slideBg:"00843D",slideText:"FFFFFF",slideSub:"FFE680"}},
+  india: {name:"India", badge:"India · saffron, white and green", sw:"linear-gradient(#ff9933 0 33%,#ffffff 33% 67%,#138808 67%)", dark:false,
+    ui:{pitch:"#fff6ec","pitch-2":"#fdefe0",surface:"#ffffff",line:"#f0d8bd",chalk:"#1b2559",muted:"#646a85",gold:"#f08a1c","accent-ink":"#1d1203","stage-line":"rgba(19,136,8,.30)",glow:"rgba(255,255,255,.7)","modes-bg":"rgba(255,255,255,.88)","drop-over":"#ffe9d1",ok:"#138808",err:"#b3261e",flag:"linear-gradient(#ff9933 0 33%,#ffffff 33% 67%,#138808 67%)"},
+    ball:[[1.0,0.7,0.35],[0.1,0.14,0.36],[1.0,0.99,0.96]],
+    doc:{h:"1B2559",rule:"FF9933",acc:"138808",fill:"FFEBD6",border:"EFD3B6",slideBg:"1B2559",slideText:"FFFFFF",slideSub:"FFC58A"}}
+};
+var schemeKey = "spain";
+function applyScheme(k){
+  const sc = SCHEMES[k]; if(!sc) return; schemeKey = k;
+  const root = document.documentElement.style;
+  for(const [name, v] of Object.entries(sc.ui)) root.setProperty("--" + name, v);
+  root.setProperty("color-scheme", sc.dark ? "dark" : "light");
+  $("champText").textContent = sc.badge;
+  document.querySelectorAll(".scheme").forEach(b=> b.setAttribute("aria-pressed", b.dataset.s === k ? "true" : "false"));
+  window.__kdScheme = sc.ball;
+  if(ballScheme) ballScheme(...sc.ball);
+  try { localStorage.setItem("kd-scheme", k); } catch(e){}
+}
+for(const [k, sc] of Object.entries(SCHEMES)){
+  const b = document.createElement("button");
+  b.type = "button"; b.className = "scheme"; b.dataset.s = k; b.style.setProperty("--sw", sc.sw);
+  b.innerHTML = `<i></i>${sc.name}`;
+  b.addEventListener("click", ()=> applyScheme(k));
+  $("schemes").appendChild(b);
+}
+try { const saved = localStorage.getItem("kd-scheme"); if(saved && SCHEMES[saved]) schemeKey = saved; } catch(e){}
+applyScheme(schemeKey);
+
+/* ---------- state + UI ---------- */
+let current = "pdf";
+const chips = $("chips");
+KEYS.forEach(k=>{
+  const f = FORMATS[k];
+  const b = document.createElement("button");
+  b.type = "button"; b.className = "chip"; b.dataset.k = k;
+  b.style.setProperty("--c", f.color);
+  b.innerHTML = `<b><i></i>${f.label}</b><small>${f.name}</small>`;
+  b.addEventListener("click", ()=> pick(k, -1));
+  chips.appendChild(b);
+});
+function setMakeLabel(){ const f = FORMATS[current]; $("make").textContent = (typeof sourceFile !== "undefined" && sourceFile ? "Convert to " : "Make ") + f.label; }
+function updateUI(){
+  const f = FORMATS[current];
+  document.documentElement.style.setProperty("--pick", f.color);
+  document.documentElement.style.setProperty("--pick-ink", f.ink);
+  $("pickName").textContent = f.name;
+  $("pickExt").textContent = "." + f.ext;
+  setMakeLabel();
+  chips.querySelectorAll(".chip").forEach(c=> c.setAttribute("aria-pressed", c.dataset.k === current ? "true" : "false"));
+  setStatus("");
+  if(typeof updateFontUI === "function" && $("font")) try{ updateFontUI(); }catch(e){}
+  loadLib(current).catch(()=>{});
+}
+function setStatus(msg, kind){ const s=$("status"); s.textContent = msg; s.className = "status" + (kind ? " "+kind : ""); }
+
+/* ---------- 3D football ---------- */
+const stage = $("stage"), canvas = $("ball"), labelsEl = $("labels"), shadowEl = $("shadow");
+let pick = (k)=>{ current = k; updateUI(); };   // replaced once 3D is ready
+let ballOK = false;
+var ballScheme = null;
+
+if(window.THREE){ try { initBall(); ballOK = true; } catch(e){ console.warn(e); } }
+if(!ballOK){ $("kick").addEventListener("click", ()=> pick(KEYS[Math.floor(Math.random()*KEYS.length)])); }
+
+function initBall(){
+  const T = THREE, R = 1.6, PHI = (1+Math.sqrt(5))/2;
+  const raw = [[0,1,PHI],[0,1,-PHI],[0,-1,PHI],[0,-1,-PHI],[1,PHI,0],[1,-PHI,0],[-1,PHI,0],[-1,-PHI,0],[PHI,0,1],[PHI,0,-1],[-PHI,0,1],[-PHI,0,-1]];
+  const verts = raw.map(v=> new T.Vector3(...v));
+  // faces: triples of mutually adjacent vertices (edge length 2)
+  const faces = [];
+  for(let a=0;a<12;a++)for(let b=a+1;b<12;b++)for(let c=b+1;c<12;c++){
+    const e=(i,j)=>Math.abs(verts[i].distanceTo(verts[j])-2)<1e-6;
+    if(e(a,b)&&e(b,c)&&e(a,c)) faces.push(new T.Vector3().add(verts[a]).add(verts[b]).add(verts[c]).normalize());
+  }
+  const pents = verts.map(v=>v.clone().normalize());
+  // each antipodal pair of pentagons shares a format
+  const pentFormat = new Array(12); let pair = 0;
+  for(let i=0;i<12;i++){ if(pentFormat[i]) continue; const j = pents.findIndex(p=>p.distanceTo(pents[i].clone().negate())<1e-6); pentFormat[i]=pentFormat[j]=KEYS[pair++]; }
+
+  const centers = pents.concat(faces);                   // 0..11 pentagons, 12..31 hexagons
+  const BIAS = 0.0388;                                   // makes pentagons truly smaller, like a real ball
+  const bias = centers.map((_,i)=> i<12 ? BIAS : -BIAS);
+  const white = new T.Vector3(0.98,0.95,0.88);
+  const cols = centers.map((_,i)=> i<12 ? (c=>new T.Vector3(c.r,c.g,c.b))(new T.Color(FORMATS[pentFormat[i]].color)) : white.clone());
+
+  const renderer = new T.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 2));
+  const scene = new T.Scene();
+  const camera = new T.PerspectiveCamera(35, 1, 0.1, 50);
+  camera.position.set(0,0,7);
+
+  const uniforms = {
+    centers:{value:centers}, cols:{value:cols}, bias:{value:bias},
+    selIdx:{value:-1}, time:{value:0}, camPos:{value:camera.position}, rimCol:{value:new T.Vector3(1.0,0.78,0.25)}, seamCol:{value:new T.Vector3(0.12,0.03,0.04)}
+  };
+  const mat = new T.ShaderMaterial({uniforms,
+    vertexShader:`
+      varying vec3 vObj; varying vec3 vN; varying vec3 vW;
+      void main(){ vObj = normalize(position); vN = normalize(mat3(modelMatrix)*normal);
+        vec4 w = modelMatrix*vec4(position,1.0); vW = w.xyz; gl_Position = projectionMatrix*viewMatrix*w; }`,
+    fragmentShader:`
+      uniform vec3 centers[32]; uniform vec3 cols[32]; uniform float bias[32];
+      uniform float selIdx; uniform float time; uniform vec3 camPos; uniform vec3 rimCol; uniform vec3 seamCol;
+      varying vec3 vObj; varying vec3 vN; varying vec3 vW;
+      void main(){
+        vec3 n = normalize(vObj);
+        float b1 = 10.0, b2 = 10.0, idx = -1.0; vec3 col = vec3(1.0);
+        for(int i=0;i<32;i++){
+          float s = acos(clamp(dot(n, centers[i]), -1.0, 1.0)) + bias[i];
+          if(s < b1){ b2 = b1; b1 = s; col = cols[i]; idx = float(i); }
+          else if(s < b2){ b2 = s; }
+        }
+        float gap = b2 - b1;
+        if(abs(idx - selIdx) < 0.5){ col = mix(col, vec3(1.0), 0.18 + 0.12*sin(time*5.0)); }
+        float seam = 1.0 - smoothstep(0.004, 0.012, gap);
+        float pillow = 0.78 + 0.22*smoothstep(0.0, 0.09, gap);
+        vec3 N = normalize(vN);
+        vec3 L = normalize(vec3(-0.45, 0.85, 0.9));
+        vec3 V = normalize(camPos - vW);
+        vec3 H = normalize(L + V);
+        float diff = max(dot(N, L), 0.0);
+        float spec = pow(max(dot(N, H), 0.0), 70.0) * 0.55;
+        float rim = pow(1.0 - max(dot(N, V), 0.0), 3.0);
+        vec3 base = col * pillow;
+        vec3 c = base * (0.32 + 0.78*diff) + vec3(spec) + rimCol*rim*0.32;
+        c = mix(c, seamCol, seam*0.9);
+        gl_FragColor = vec4(c, 1.0);
+      }`
+  });
+  const ball = new T.Mesh(new T.SphereGeometry(R, 128, 96), mat);
+  scene.add(ball);
+  ballScheme = (rim, seam, panel)=>{
+    uniforms.rimCol.value.set(...rim); uniforms.seamCol.value.set(...seam);
+    for(let i=12;i<32;i++) cols[i].set(...panel);
+  };
+  if(window.__kdScheme) ballScheme(...window.__kdScheme);
+
+  // floating labels for the 12 coloured panels
+  const labelEls = pents.map((p,i)=>{
+    const b = document.createElement("button");
+    b.type="button"; b.className="lbl"; b.tabIndex=-1; b.textContent = FORMATS[pentFormat[i]].label;
+    b.addEventListener("click", e=>{ e.stopPropagation(); pick(pentFormat[i], i); });
+    labelsEl.appendChild(b); return b;
+  });
+
+  let W=1, H=1, maxX=0, maxY=0, maxYT=0;
+  function resize(){
+    W = stage.clientWidth; H = stage.clientHeight;
+    renderer.setSize(W, H, false); camera.aspect = W/H;
+    // keep the ball fully in view on narrow stages, with room to move it around
+    camera.fov = W/H < 1 ? 2*Math.atan(Math.tan(17.5*Math.PI/180)/(W/H))*180/Math.PI : 35;
+    camera.position.z = W < 520 ? 10.5 : 9.5;
+    camera.updateProjectionMatrix();
+    const hh = camera.position.z*Math.tan(camera.fov*Math.PI/360), hw = hh*camera.aspect;
+    maxX = Math.max(0, hw - R*1.05); maxY = Math.max(0, hh - R*1.25); maxYT = Math.max(0, maxY - hh*0.2);   // keep clear of the Move/Spin switch
+    pos.x = Math.max(-maxX, Math.min(maxX, pos.x)); pos.y = Math.max(-maxY, Math.min(maxYT, pos.y));
+  }
+  const pos = new T.Vector2(0,0), vel = new T.Vector2(0,0);   // ball position on the pitch, world units
+  resize();
+  (window.ResizeObserver ? new ResizeObserver(resize).observe(stage) : addEventListener("resize", resize));
+
+  // Move / Spin toggle
+  let dragMode = "move";
+  try { if(localStorage.getItem("kd-drag") === "spin") dragMode = "spin"; } catch(e){}
+  const modeBtns = document.querySelectorAll(".modes button");
+  function setDragMode(m){
+    dragMode = m;
+    modeBtns.forEach(b=> b.setAttribute("aria-pressed", b.dataset.m === m ? "true" : "false"));
+    $("hint").textContent = m === "move" ? "Drag to move · tap a panel" : "Drag to spin · tap a panel";
+    try { localStorage.setItem("kd-drag", m); } catch(e){}
+  }
+  modeBtns.forEach(b=> b.addEventListener("click", ()=> setDragMode(b.dataset.m)));
+  setDragMode(dragMode);
+
+  // motion state
+  const angVel = new T.Vector3();
+  let mode = "seek", target = new T.Quaternion(), decay = 0.15, kickT = -1, pendingPick = null, selPent = -1;
+  let chase = null;                                      // where the ball is rolling to (finger / cursor)
+  const Z = new T.Vector3(0,0,1), tmpQ = new T.Quaternion(), tmpV = new T.Vector3(), rollAxis = new T.Vector3();
+
+  function worldOf(i){ return tmpV.copy(pents[i]).applyQuaternion(ball.quaternion); }
+  function faceToCamera(i){
+    const w = worldOf(i).clone();
+    const lift = new T.Vector3(0, 0.12, 1).normalize();     // slightly above centre reads better
+    target.setFromUnitVectors(w, lift).multiply(ball.quaternion);
+    mode = "seek";
+  }
+  function bestPentFor(key){
+    let best=-1, bz=-2;
+    for(let i=0;i<12;i++){ if(pentFormat[i]!==key) continue; const z = worldOf(i).z; if(z>bz){bz=z;best=i;} }
+    return best;
+  }
+  pick = function(key, pentIdx){
+    current = key; updateUI();
+    selPent = pentIdx >= 0 ? pentIdx : bestPentFor(key);
+    uniforms.selIdx.value = selPent;
+    faceToCamera(selPent);
+    if(reduceMotion) ball.quaternion.copy(target);
+  };
+
+  // start: show PDF panel facing the viewer, slightly turned
+  ball.quaternion.setFromEuler(new T.Euler(0.5, -0.7, 0.2));
+  selPent = bestPentFor("pdf"); uniforms.selIdx.value = selPent; faceToCamera(selPent);
+  ball.quaternion.slerp(target, 0.55);
+
+  function kick(){
+    const k = KEYS[Math.floor(Math.random()*KEYS.length)];
+    if(reduceMotion){ pick(k, -1); return; }
+    const axis = new T.Vector3(Math.random()-0.5, Math.random()-0.5, (Math.random()-0.5)*0.4).normalize();
+    angVel.copy(axis).multiplyScalar(18 + Math.random()*6);
+    decay = 0.3; mode = "kick"; kickT = 0; pendingPick = k; chase = null;
+    const a = Math.random()*Math.PI*2; vel.set(Math.cos(a), Math.sin(a)).multiplyScalar(5 + Math.random()*3);
+    uniforms.selIdx.value = -1;
+    setStatus("");
+  }
+  $("kick").addEventListener("click", kick);
+
+  // pointer → point on the pitch (z = 0 plane)
+  const ray = new T.Raycaster(), ndc = new T.Vector2();
+  function toNDC(e){ const r = canvas.getBoundingClientRect(); ndc.set(((e.clientX-r.left)/r.width)*2-1, -((e.clientY-r.top)/r.height)*2+1); }
+  function pitchPoint(e){
+    toNDC(e); ray.setFromCamera(ndc, camera);
+    const o = ray.ray.origin, d = ray.ray.direction, t = -o.z / d.z;
+    return new T.Vector2(o.x + d.x*t, o.y + d.y*t);
+  }
+  const clampPos = v => { v.x = Math.max(-maxX, Math.min(maxX, v.x)); v.y = Math.max(-maxY, Math.min(maxYT, v.y)); return v; };
+
+  // drag + tap (mouse, pen and touch all use pointer events)
+  let dragging=false, lastX=0, lastY=0, lastT=0, moved=0, grabOff = new T.Vector2(), downHit = false;
+  canvas.addEventListener("pointerdown", e=>{
+    dragging=true; moved=0; lastX=e.clientX; lastY=e.clientY; lastT=performance.now();
+    canvas.setPointerCapture && canvas.setPointerCapture(e.pointerId);
+    toNDC(e); ray.setFromCamera(ndc, camera); downHit = !!ray.intersectObject(ball)[0];
+    const p = pitchPoint(e); grabOff.copy(p).sub(pos);
+    if(!downHit) grabOff.set(0,0);
+    angVel.set(0,0,0); if(mode!=="kick") mode="free";
+  });
+  canvas.addEventListener("pointermove", e=>{
+    if(!dragging) return;
+    const dx=e.clientX-lastX, dy=e.clientY-lastY, now=performance.now(), dt=Math.max((now-lastT)/1000, 1/240);
+    lastX=e.clientX; lastY=e.clientY; lastT=now; moved += Math.abs(dx)+Math.abs(dy);
+    if(moved < 6) return;
+    mode = "free"; pendingPick = null;
+    if(dragMode === "move"){
+      chase = clampPos(pitchPoint(e).sub(grabOff));
+      return;
+    }
+    const len = Math.hypot(dx,dy); if(!len) return;
+    const ang = len * Math.PI / H * 1.1;
+    const axis = new T.Vector3(dy, dx, 0).normalize();
+    tmpQ.setFromAxisAngle(axis, ang); ball.quaternion.premultiply(tmpQ);
+    angVel.copy(axis).multiplyScalar(Math.min(ang/dt, 25)); decay = 0.12;
+  });
+  function endDrag(e){
+    if(!dragging) return; dragging=false;
+    if(moved < 6){ angVel.set(0,0,0); tap(e); return; }
+    if(dragMode === "move") chase = null;                // let it glide with the speed it had
+  }
+  canvas.addEventListener("pointerup", endDrag);
+  canvas.addEventListener("pointercancel", ()=>{ dragging=false; chase=null; });
+
+  function tap(e){
+    toNDC(e); ray.setFromCamera(ndc, camera);
+    const hit = ray.intersectObject(ball)[0];
+    if(!hit){
+      // tapped the grass: roll the ball there
+      if(dragMode === "move"){ chase = clampPos(pitchPoint(e)); chase.tapped = true; mode = "free"; }
+      else if(mode!=="kick" && selPent>=0) faceToCamera(selPent);
+      return;
+    }
+    const local = ball.worldToLocal(hit.point.clone()).normalize();
+    let best=-1, bs=1e9;
+    centers.forEach((c,i)=>{ const s = Math.acos(Math.max(-1,Math.min(1,local.dot(c)))) + bias[i]; if(s<bs){bs=s;best=i;} });
+    if(best < 12) pick(pentFormat[best], best);
+    else { angVel.set((Math.random()-0.5)*2, (Math.random()-0.5)*2, 0); decay=0.2; mode="free"; }
+  }
+
+  // render loop
+  let prev = performance.now(), t = 0;
+  const proj = new T.Vector3(), proj2 = new T.Vector3(), proj3 = new T.Vector3(), prevPos = new T.Vector2();
+  function frame(now){
+    const dt = Math.min((now-prev)/1000, 0.05); prev = now; t += dt;
+    uniforms.time.value = t;
+    prevPos.copy(pos);
+
+    // position on the pitch
+    if(chase){
+      const k = 1 - Math.pow(chase.tapped ? 0.02 : 0.00002, dt);
+      const nx = pos.x + (chase.x-pos.x)*k, ny = pos.y + (chase.y-pos.y)*k;
+      vel.set((nx-pos.x)/Math.max(dt,1e-3), (ny-pos.y)/Math.max(dt,1e-3));
+      pos.set(nx, ny);
+      if(chase.tapped && Math.hypot(chase.x-pos.x, chase.y-pos.y) < 0.01){ chase = null; vel.set(0,0); }
+    } else if(vel.lengthSq() > 1e-6){
+      pos.x += vel.x*dt; pos.y += vel.y*dt;
+      if(pos.x > maxX){ pos.x = maxX; vel.x = -Math.abs(vel.x)*0.7; } else if(pos.x < -maxX){ pos.x = -maxX; vel.x = Math.abs(vel.x)*0.7; }
+      if(pos.y > maxYT){ pos.y = maxYT; vel.y = -Math.abs(vel.y)*0.7; } else if(pos.y < -maxY){ pos.y = -maxY; vel.y = Math.abs(vel.y)*0.7; }
+      vel.multiplyScalar(Math.pow(mode === "kick" ? 0.35 : 0.08, dt));
+      if(vel.lengthSq() < 1e-4) vel.set(0,0);
+    }
+    // roll: the ball turns by exactly the distance it travelled
+    const mx = pos.x-prevPos.x, my = pos.y-prevPos.y, dist = Math.hypot(mx,my);
+    if(dist > 1e-5){
+      rollAxis.set(-my, mx, 0).normalize();
+      tmpQ.setFromAxisAngle(rollAxis, dist/R); ball.quaternion.premultiply(tmpQ);
+      if(mode === "seek") mode = "free";
+    }
+
+    if(mode === "kick" || mode === "free"){
+      const sp = angVel.length();
+      if(sp > 1e-4){ tmpQ.setFromAxisAngle(tmpV.copy(angVel).normalize(), sp*dt); ball.quaternion.premultiply(tmpQ); angVel.multiplyScalar(Math.pow(decay, dt)); }
+      if(mode === "kick" && sp < 3.2 && vel.length() < 0.6 && pendingPick){ const k = pendingPick; pendingPick=null; vel.set(0,0); pick(k, -1); }
+    } else if(mode === "seek"){
+      ball.quaternion.slerp(target, 1 - Math.pow(0.004, dt));
+    }
+
+    // bounce for kicks, gentle float otherwise
+    let lift = reduceMotion ? 0 : Math.sin(t*1.6)*0.05;
+    if(kickT >= 0){ kickT += dt; const k = kickT/0.9; if(k<1){ lift += Math.sin(k*Math.PI)*0.55*(1-k*0.4); } else kickT=-1; }
+    ball.position.set(pos.x, pos.y + lift, 0);
+
+    // shadow sits under the ball and shrinks as it lifts
+    proj.set(pos.x, pos.y - R*0.98, -0.2).project(camera);
+    proj2.set(pos.x + R, pos.y, 0).project(camera);
+    const cx = (proj.x+1)/2*W, cy = (1-proj.y)/2*H, rad = Math.abs(proj2.x - proj3.set(pos.x,pos.y,0).project(camera).x)/2*W;
+    const sh = 1 - lift*0.45;
+    shadowEl.style.width = (rad*1.7)+"px"; shadowEl.style.height = (rad*0.28)+"px";
+    shadowEl.style.transform = `translate(${cx}px,${cy}px) translate(-50%,-50%) scale(${sh})`;
+    shadowEl.style.opacity = String(Math.max(0.15, sh));
+
+    renderer.render(scene, camera);
+
+    // place labels
+    for(let i=0;i<12;i++){
+      const w = worldOf(i);
+      const facing = w.z;                                   // camera sits on +z
+      const el = labelEls[i];
+      const o = Math.max(0, Math.min(1, (facing-0.35)/0.35));
+      if(o <= 0){ el.style.opacity="0"; el.style.pointerEvents="none"; continue; }
+      proj.copy(w).multiplyScalar(R*1.01).add(ball.position).project(camera);
+      const x = (proj.x+1)/2*W, yy = (1-proj.y)/2*H, s = 0.7 + 0.3*facing;
+      el.style.transform = `translate(${x}px,${yy}px) translate(-50%,-50%) scale(${s})`;
+      el.style.opacity = String(o);
+      el.style.pointerEvents = o > 0.6 ? "auto" : "none";
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+updateUI();
+
+/* ---------- content parsing ---------- */
+function parse(text){
+  const blocks = []; let tbl = null;
+  for(const line of text.split(/\r?\n/)){
+    const t = line.trim();
+    if(t.includes("|") && !t.startsWith("#")){
+      if(/^\|?[\s:\-|]+\|?$/.test(t)) continue;          // markdown separator row
+      const cells = t.replace(/^\|/, "").replace(/\|$/, "").split("|").map(s=>s.trim());
+      if(!tbl){ tbl = {type:"table", rows:[]}; blocks.push(tbl); }
+      tbl.rows.push(cells); continue;
+    }
+    tbl = null;
+    if(!t) continue;
+    let m;
+    if((m = t.match(/^(#{1,3})\s+(.*)$/))) blocks.push({type:"h", level:m[1].length, text:m[2]});
+    else if((m = t.match(/^[-*•]\s+(.*)$/))) blocks.push({type:"li", text:m[1]});
+    else blocks.push({type:"p", text:t});
+  }
+  const unesc = v => String(v).replace(/│/g, "|").replace(/\u200B/g, "");
+  blocks.forEach(b=>{ if(b.text) b.text = unesc(b.text); if(b.rows) b.rows = b.rows.map(r=>r.map(unesc)); });
+  blocks.forEach(b=>{ if(b.type==="table"){ const n = Math.max(...b.rows.map(r=>r.length)); b.rows.forEach(r=>{ while(r.length<n) r.push(""); }); } });
+  return blocks;
+}
+const asNum = v => /^-?\d[\d,]*(\.\d+)?$/.test(v) ? Number(v.replace(/,/g,"")) : v;
+const slug = s => (s||"document").toLowerCase().normalize("NFKD").replace(/[^\w\s-]/g,"").trim().replace(/[\s_]+/g,"-").replace(/-+/g,"-").slice(0,80) || "document";
+const today = () => new Date().toLocaleDateString(undefined, {year:"numeric", month:"long", day:"numeric"});
+
+/* ---------- builders ---------- */
+const BUILD = {
+  async pdf(d){
+    const {jsPDF} = window.jspdf;
+    const doc = new jsPDF({unit:"pt", format:"a4"});
+    const F = d.style.pdf, z = d.style.scale;
+    const W = doc.internal.pageSize.getWidth(), Hh = doc.internal.pageSize.getHeight(), M = 56, CW = W-2*M;
+    let y = M;
+    const ensure = h => { if(y+h > Hh-M){ doc.addPage(); y = M; } };
+    const TH = d.theme, rgb = h => [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
+    doc.setFont(F,"bold"); doc.setFontSize(24*z); doc.setTextColor(...rgb(TH.h));
+    doc.splitTextToSize(d.title, CW).forEach(l=>{ ensure(30*z); doc.text(l, M, y+22*z); y+=30*z; });
+    doc.setFont(F,"normal"); doc.setFontSize(10*z); doc.setTextColor(110,120,115);
+    doc.text([d.author, d.date].filter(Boolean).join("  ·  "), M, y+8*z); y += 20*z;
+    doc.setDrawColor(...rgb(TH.rule)); doc.setLineWidth(2); doc.line(M, y, W-M, y); doc.setDrawColor(...rgb(TH.acc)); doc.line(M, y+2.5, W-M, y+2.5); y += 20;
+    for(const b of d.blocks){
+      if(b.type==="h"){
+        y += 10*z; doc.setFont(F,"bold"); doc.setFontSize((b.level===1?16:13)*z); doc.setTextColor(...rgb(TH.h));
+        doc.splitTextToSize(b.text, CW).forEach(l=>{ ensure(22*z); doc.text(l, M, y+14*z); y+=21*z; }); y += 2;
+      } else if(b.type==="p" || b.type==="li"){
+        doc.setFont(F,"normal"); doc.setFontSize(11*z); doc.setTextColor(30,34,32);
+        const ind = b.type==="li" ? 16*z : 0, lh = 16*z;
+        doc.splitTextToSize(b.text, CW-ind).forEach((l,i)=>{ ensure(lh); if(b.type==="li" && i===0) doc.text("•", M+3, y+11*z); doc.text(l, M+ind, y+11*z); y+=lh; });
+        y += (b.type==="p" ? 6 : 2)*z;
+      } else if(b.type==="table"){
+        y += 6; const n = b.rows[0].length, cw = CW/n; doc.setFontSize(10*z);
+        b.rows.forEach((r,ri)=>{
+          doc.setFont(F, ri===0 ? "bold" : "normal");
+          const cells = r.map(c=>doc.splitTextToSize(String(c), cw-12));
+          const h = Math.max(...cells.map(c=>c.length))*13*z + 10;
+          ensure(h);
+          if(ri===0){ doc.setFillColor(...rgb(TH.fill)); doc.rect(M, y, CW, h, "F"); }
+          doc.setDrawColor(...rgb(TH.border)); doc.setLineWidth(0.6);
+          cells.forEach((c,ci)=>{ doc.rect(M+ci*cw, y, cw, h); doc.setTextColor(30,34,32); doc.text(c, M+ci*cw+6, y+5+10*z); });
+          y += h;
+        });
+        y += 14;
+      }
+    }
+    const n = doc.getNumberOfPages();
+    for(let i=1;i<=n;i++){ doc.setPage(i); doc.setFont(F,"normal"); doc.setFontSize(9); doc.setTextColor(140,150,145); doc.text(`${i} / ${n}`, W-M, Hh-28, {align:"right"}); }
+    return doc.output("blob");
+  },
+
+  async docx(d){
+    const D = window.docx, kids = [];
+    kids.push(new D.Paragraph({text:d.title, heading:D.HeadingLevel.TITLE}));
+    kids.push(new D.Paragraph({spacing:{after:240}, children:[new D.TextRun({text:[d.author,d.date].filter(Boolean).join("  ·  "), italics:true, color:"666666"})]}));
+    const HL = [null, D.HeadingLevel.HEADING_1, D.HeadingLevel.HEADING_2, D.HeadingLevel.HEADING_3];
+    for(const b of d.blocks){
+      if(b.type==="h") kids.push(new D.Paragraph({text:b.text, heading:HL[b.level]}));
+      else if(b.type==="li") kids.push(new D.Paragraph({text:b.text, bullet:{level:0}}));
+      else if(b.type==="p") kids.push(new D.Paragraph({spacing:{after:120}, children:[new D.TextRun(b.text)]}));
+      else if(b.type==="table"){
+        kids.push(new D.Table({width:{size:100, type:D.WidthType.PERCENTAGE},
+          rows:b.rows.map((r,ri)=>new D.TableRow({tableHeader:ri===0,
+            children:r.map(c=>new D.TableCell({
+              shading: ri===0 ? {fill:d.theme.fill, type:D.ShadingType.CLEAR, color:"auto"} : undefined,
+              children:[new D.Paragraph({children:[new D.TextRun({text:String(c), bold:ri===0})]})]
+            }))}))}));
+        kids.push(new D.Paragraph({text:""}));
+      }
+    }
+    const FN = d.style.font, hz = n => Math.round(n*2*d.style.scale);
+    const doc = new D.Document({creator:d.author||"Kickoff Docs", title:d.title,
+      styles:{default:{document:{run:{font:FN, size:hz(11)}},
+        title:{run:{font:FN, size:hz(28), bold:true, color:d.theme.h}},
+        heading1:{run:{font:FN, size:hz(16), bold:true, color:d.theme.h}},
+        heading2:{run:{font:FN, size:hz(13), bold:true, color:d.theme.h}},
+        heading3:{run:{font:FN, size:hz(12), bold:true, color:d.theme.h}}}},
+      sections:[{children:kids}]});
+    return D.Packer.toBlob(doc);
+  },
+
+  async xlsx(d){
+    const X = window.XLSX, wb = X.utils.book_new(), used = new Set();
+    const nameFor = s => { let n = (s||"Sheet").replace(/[\\\/?*\[\]:]/g,"").slice(0,31) || "Sheet", base=n, i=2; while(used.has(n.toLowerCase())){ n = base.slice(0,28)+" "+(i++); } used.add(n.toLowerCase()); return n; };
+    let lastH = null, count = 0;
+    for(const b of d.blocks){
+      if(b.type==="h") lastH = b.text;
+      if(b.type!=="table") continue;
+      const aoa = b.rows.map((r,ri)=> ri===0 ? r : r.map(asNum));
+      const ws = X.utils.aoa_to_sheet(aoa);
+      ws["!cols"] = b.rows[0].map((_,ci)=>({wch: Math.min(40, Math.max(8, ...b.rows.map(r=>String(r[ci]).length+2)))}));
+      X.utils.book_append_sheet(wb, ws, nameFor(lastH || ("Table "+(++count))));
+    }
+    const notes = [["Title", d.title], ["Author", d.author], ["Date", d.date], [], ["Type","Text"]];
+    d.blocks.forEach(b=>{ if(b.type!=="table") notes.push([b.type==="h"?"Heading":b.type==="li"?"Bullet":"Paragraph", b.text]); });
+    const ns = X.utils.aoa_to_sheet(notes); ns["!cols"] = [{wch:12},{wch:90}];
+    X.utils.book_append_sheet(wb, ns, nameFor("Notes"));
+    return X.write(wb, {bookType:"xlsx", type:"array"});
+  },
+
+  async pptx(d){
+    const p = new window.PptxGenJS(); p.layout = "LAYOUT_WIDE"; p.title = d.title; p.author = d.author;
+    const GREEN = d.theme.slideBg, CH = d.theme.slideText, ACC = d.theme.acc;
+    const t = p.addSlide(); t.background = {color:GREEN};
+    t.addShape(p.ShapeType.rect, {x:0.6, y:3.55, w:1.2, h:0.08, fill:{color:ACC}, line:{color:ACC}});
+    t.addText(d.title, {x:0.6, y:1.6, w:12, h:1.9, fontFace:d.style.font, fontSize:40, bold:true, color:CH, valign:"bottom"});
+    t.addText([d.author, d.date].filter(Boolean).join("  ·  "), {x:0.6, y:3.8, w:12, h:0.6, fontFace:d.style.font, fontSize:18, color:d.theme.slideSub});
+    // group blocks into slides by heading
+    const groups = []; let g = null;
+    for(const b of d.blocks){
+      if(b.type==="h"){ g = {title:b.text, items:[]}; groups.push(g); continue; }
+      if(!g){ g = {title:"Overview", items:[]}; groups.push(g); }
+      g.items.push(b);
+    }
+    let num = 1;
+    const base = title => { const s = p.addSlide(); s.background = {color:"FFFFFF"};
+      s.addShape(p.ShapeType.rect, {x:0, y:0, w:0.18, h:7.5, fill:{color:ACC}, line:{color:ACC}});
+      s.addText(title, {x:0.6, y:0.35, w:12, h:0.9, fontFace:d.style.font, fontSize:30, bold:true, color:d.theme.h});
+      s.addText(`${d.title}  ·  ${++num}`, {x:0.6, y:6.95, w:12, h:0.35, fontFace:d.style.font, fontSize:10, color:"8A9890"});
+      return s; };
+    for(const gr of groups){
+      const text = gr.items.filter(b=>b.type!=="table"), tables = gr.items.filter(b=>b.type==="table");
+      const textChunks = []; for(let i=0;i<text.length;i+=7) textChunks.push(text.slice(i,i+7));
+      if(!textChunks.length && !tables.length) textChunks.push([]);
+      textChunks.forEach((ch,ci)=>{
+        const s = base(gr.title + (ci ? " (cont.)" : ""));
+        if(ch.length) s.addText(ch.map(b=>({text:b.text, options:{bullet: b.type==="li" ? {indent:20} : false, breakLine:true, paraSpaceAfter:8}})),
+          {x:0.6, y:1.4, w:12, h:5.3, fontFace:d.style.font, fontSize:Math.round(20*d.style.scale), color:"1E2220", valign:"top"});
+      });
+      for(const tb of tables){
+        const head = tb.rows[0], body = tb.rows.slice(1);
+        for(let i=0;i<Math.max(body.length,1);i+=10){
+          const s = base(gr.title + (i ? " (cont.)" : ""));
+          const rows = [head.map(c=>({text:String(c), options:{bold:true, color:CH, fill:{color:GREEN}}}))].concat(body.slice(i,i+10).map(r=>r.map(c=>({text:String(c)}))));
+          s.addTable(rows, {x:0.6, y:1.45, w:12.1, fontFace:d.style.font, fontSize:Math.round(16*d.style.scale), color:"1E2220", border:{type:"solid", pt:0.75, color:d.theme.border}, fill:{color:"FFFFFF"}, rowH:0.45});
+        }
+      }
+    }
+    return p.write({outputType:"blob"});
+  },
+
+  async csv(d){
+    const esc = v => { v = String(v); return /[",\n\r]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; };
+    const tables = d.blocks.filter(b=>b.type==="table");
+    let lines = [];
+    if(tables.length) tables.forEach((t,i)=>{ if(i) lines.push(""); t.rows.forEach(r=>lines.push(r.map(esc).join(","))); });
+    else { lines.push("Type,Text"); d.blocks.forEach(b=>lines.push([b.type==="h"?"Heading":b.type==="li"?"Bullet":"Paragraph", b.text].map(esc).join(","))); }
+    return "\ufeff" + lines.join("\r\n") + "\r\n";
+  },
+
+  async md(d){
+    const out = [`# ${d.title}`, "", `_${[d.author, d.date].filter(Boolean).join(" · ")}_`, ""];
+    let prev = null;
+    for(const b of d.blocks){
+      if(prev==="li" && b.type!=="li") out.push("");
+      if(b.type==="h") out.push("#".repeat(Math.min(6,b.level+1))+" "+b.text, "");
+      else if(b.type==="li") out.push("- "+b.text);
+      else if(b.type==="p") out.push(b.text, "");
+      else { const r = b.rows; out.push("| "+r[0].join(" | ")+" |", "|"+r[0].map(()=>" --- ").join("|")+"|"); r.slice(1).forEach(x=>out.push("| "+x.join(" | ")+" |")); out.push(""); }
+      prev = b.type;
+    }
+    return out.join("\n").replace(/\n{3,}/g,"\n\n") + "\n";
+  }
+};
+
+/* ---------- reading a file from the device ---------- */
+const READ_LIBS = {
+  mammoth: {url:"libs/mammoth.browser.min.js", ready:()=>window.mammoth},
+  pdfjs:   {url:"libs/pdf.min.js", ready:()=>window.pdfjsLib},
+  pdfwork: {url:"libs/pdf.worker.min.js", ready:()=>window.pdfjsWorker},
+  jszip:   {url:"libs/jszip.min.js", ready:()=>window.JSZip},
+  xlsx:    {url:FORMATS.xlsx.lib, ready:()=>window.XLSX}
+};
+const readCache = {};
+function loadRead(name){
+  const L = READ_LIBS[name];
+  if(L.ready()) return Promise.resolve();
+  if(readCache[name]) return readCache[name];
+  readCache[name] = new Promise((res, rej)=>{
+    const s = document.createElement("script"); s.src = L.url; s.async = true;
+    s.onload = ()=> L.ready() ? res() : rej(new Error("a reader did not start"));
+    s.onerror = ()=>{ delete readCache[name]; rej(new Error("could not load the file reader. Check your connection and try again.")); };
+    document.head.appendChild(s);
+  });
+  return readCache[name];
+}
+
+const clean = s => String(s == null ? "" : s).replace(/\s+/g, " ").trim();
+
+function htmlToBlocks(html){
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const out = [];
+  const walk = el => {
+    for(const n of el.children){
+      const tag = n.tagName.toLowerCase();
+      if(/^h[1-6]$/.test(tag)){ const t = clean(n.textContent); if(t) out.push({type:"h", level:Math.min(3, +tag[1]), text:t}); }
+      else if(tag === "ul" || tag === "ol"){ for(const li of n.querySelectorAll(":scope > li")){ const t = clean(li.textContent); if(t) out.push({type:"li", text:t}); } }
+      else if(tag === "table"){
+        const rows = [...n.querySelectorAll("tr")].map(tr=>[...tr.children].map(td=>clean(td.textContent))).filter(r=>r.some(Boolean));
+        if(rows.length){ const w = Math.max(...rows.map(r=>r.length)); rows.forEach(r=>{ while(r.length<w) r.push(""); }); out.push({type:"table", rows}); }
+      }
+      else if(["script","style","noscript","template","svg","img"].includes(tag)) continue;
+      else if(tag === "p" || tag === "blockquote" || tag === "pre" || tag === "li"){ const t = clean(n.textContent); if(t) out.push({type:"p", text:t}); }
+      else if(n.children.length) walk(n);
+      else { const t = clean(n.textContent); if(t) out.push({type:"p", text:t}); }
+    }
+  };
+  walk(doc.body);
+  return out;
+}
+
+async function readPdf(buf){
+  await loadRead("pdfwork"); await loadRead("pdfjs");
+  const pdf = await window.pdfjsLib.getDocument({data:new Uint8Array(buf), isEvalSupported:false}).promise;
+  const lines = [];
+  for(let p=1; p<=pdf.numPages; p++){
+    const page = await pdf.getPage(p);
+    const tc = await page.getTextContent();
+    let cur = null;
+    for(const it of tc.items){
+      if(!("str" in it)) continue;
+      const y = it.transform[5], h = Math.abs(it.transform[3]) || it.height || 10;
+      if(!cur || Math.abs(y - cur.y) > Math.max(2, h*0.4)){ cur = {y, h, text:"", page:p}; lines.push(cur); }
+      cur.text += (cur.text && !cur.text.endsWith(" ") && !it.str.startsWith(" ") ? " " : "") + it.str;
+      cur.h = Math.max(cur.h, h);
+    }
+  }
+  const real = lines.map(l=>({...l, text:clean(l.text)})).filter(l=>l.text && !/^\d+\s*(\/\s*\d+)?$/.test(l.text));
+  if(!real.length) throw new Error("this PDF has no text to read (it may be a scanned image).");
+  const hs = real.map(l=>l.h).sort((a,b)=>a-b), body = hs[Math.floor(hs.length/2)];
+  const out = []; let para = null, prev = null;
+  for(const l of real){
+    const big = l.h >= body*1.25 && l.text.length < 120;
+    const bullet = l.text.match(/^[•▪●◦–\-*]\s*(.*)$/);
+    const gap = prev && prev.page === l.page ? Math.abs(prev.y - l.y) : 99;
+    if(big){ out.push({type:"h", level: l.h >= body*1.7 ? 1 : 2, text:l.text}); para = null; }
+    else if(bullet){ para = {type:"li", text:bullet[1]}; out.push(para); }
+    else if(para && gap <= l.h*1.9 && !(para.type==="li" && /^[A-Z]/.test(l.text) && /[.!?:]$/.test(para.text))){ para.text += " " + l.text; }
+    else { para = {type:"p", text:l.text}; out.push(para); }
+    prev = l;
+  }
+  return out;
+}
+
+async function readPptx(buf){
+  await loadRead("jszip");
+  const zip = await window.JSZip.loadAsync(buf);
+  const names = Object.keys(zip.files).filter(n=>/^ppt\/slides\/slide\d+\.xml$/.test(n)).sort((a,b)=>+a.match(/\d+/)[0] - +b.match(/\d+/)[0]);
+  if(!names.length) throw new Error("no slides found in this file.");
+  const out = []; const A = "http://schemas.openxmlformats.org/drawingml/2006/main", P = "http://schemas.openxmlformats.org/presentationml/2006/main";
+  for(const [i, n] of names.entries()){
+    const xml = new DOMParser().parseFromString(await zip.file(n).async("string"), "application/xml");
+    let title = null; const items = [];
+    for(const sp of xml.getElementsByTagNameNS(P, "sp")){
+      const ph = sp.getElementsByTagNameNS(P, "ph")[0], type = ph ? ph.getAttribute("type") : null;
+      const paras = [...sp.getElementsByTagNameNS(A, "p")].map(p=>clean([...p.getElementsByTagNameNS(A, "t")].map(t=>t.textContent).join(""))).filter(Boolean);
+      if(!paras.length) continue;
+      if(!title && (type === "title" || type === "ctrTitle")) title = paras.join(" ");
+      else paras.forEach(t=>items.push({type:"li", text:t}));
+    }
+    if(!title && items.length) title = items.shift().text;
+    out.push({type:"h", level:1, text: title || ("Slide " + (i+1))});
+    out.push(...items);
+    for(const tbl of xml.getElementsByTagNameNS(A, "tbl")){
+      const rows = [...tbl.getElementsByTagNameNS(A, "tr")].map(tr=>[...tr.getElementsByTagNameNS(A, "tc")].map(tc=>clean([...tc.getElementsByTagNameNS(A, "t")].map(t=>t.textContent).join(" "))));
+      if(rows.length){ const w = Math.max(...rows.map(r=>r.length)); rows.forEach(r=>{ while(r.length<w) r.push(""); }); out.push({type:"table", rows}); }
+    }
+  }
+  return out;
+}
+
+async function readSheet(buf){
+  await loadRead("xlsx");
+  const wb = window.XLSX.read(buf, {type:"array"});
+  const out = [];
+  for(const name of wb.SheetNames){
+    const rows = window.XLSX.utils.sheet_to_json(wb.Sheets[name], {header:1, raw:false, defval:""})
+      .map(r=>r.map(clean)).filter(r=>r.some(Boolean));
+    if(!rows.length) continue;
+    const w = Math.max(...rows.map(r=>r.length)); rows.forEach(r=>{ while(r.length<w) r.push(""); });
+    if(wb.SheetNames.length > 1) out.push({type:"h", level:1, text:name});
+    out.push({type:"table", rows});
+  }
+  return out;
+}
+
+function readJson(text){
+  const v = JSON.parse(text);
+  const arr = Array.isArray(v) ? v : (v && typeof v === "object" ? Object.values(v).find(Array.isArray) : null);
+  if(arr && arr.length && arr.every(o=>o && typeof o === "object" && !Array.isArray(o))){
+    const keys = [...new Set(arr.flatMap(o=>Object.keys(o)))];
+    return [{type:"table", rows:[keys, ...arr.map(o=>keys.map(k=>clean(typeof o[k] === "object" ? JSON.stringify(o[k]) : o[k])))]}];
+  }
+  return JSON.stringify(v, null, 2).split("\n").map(l=>({type:"p", text:l}));
+}
+
+async function readAnyFile(file){
+  const ext = (file.name.split(".").pop() || "").toLowerCase();
+  if(ext === "doc" || ext === "ppt") throw new Error(`old .${ext} files can't be read here. Save it as .${ext}x first, then try again.`);
+  if(ext === "pdf") return readPdf(await file.arrayBuffer());
+  if(ext === "docx"){ await loadRead("mammoth"); const r = await window.mammoth.convertToHtml({arrayBuffer: await file.arrayBuffer()}); return htmlToBlocks(r.value); }
+  if(ext === "pptx") return readPptx(await file.arrayBuffer());
+  if(["xlsx","xls","xlsm","ods","numbers"].includes(ext)) return readSheet(await file.arrayBuffer());
+  const text = await file.text();
+  if(ext === "csv" || ext === "tsv") return readSheet(new TextEncoder().encode(text).buffer);
+  if(ext === "html" || ext === "htm") return htmlToBlocks(text);
+  if(ext === "json") return readJson(text);
+  if(["txt","md","markdown","text",""].includes(ext) || file.type.startsWith("text/")) return parse(text);
+  throw new Error(`.${ext} files aren't supported. Try PDF, Word, Excel, PowerPoint, CSV, text, Markdown or HTML.`);
+}
+
+// blocks → the editor's simple markup, so the file can be checked and edited before converting
+function blocksToMarkup(blocks){
+  const safe = s => String(s).replace(/\|/g, "│");
+  const out = []; let prev = null;
+  for(const b of blocks){
+    if(prev && (b.type === "h" || b.type === "table" || prev === "table" || (prev === "li" && b.type !== "li"))) out.push("");
+    if(b.type === "h") out.push("#".repeat(b.level) + " " + safe(b.text));
+    else if(b.type === "li") out.push("- " + safe(b.text));
+    else if(b.type === "p") out.push(safe(b.text).replace(/^([#\-*•])/, "​$1"));
+    else b.rows.forEach(r=>out.push(r.map(c=>safe(c) || " ").join(" | ")));
+    prev = b.type;
+  }
+  return out.join("\n");
+}
+
+var sourceFile = null;
+const prettyTitle = name => name.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim().replace(/\b\w/g, c=>c.toUpperCase());
+async function takeFile(file){
+  if(!file) return;
+  const zone = $("drop");
+  zone.classList.add("busy"); $("srcName").textContent = "Reading " + file.name + "…"; setStatus("");
+  try{
+    const blocks = await readAnyFile(file);
+    if(!blocks.length) throw new Error("no text found in this file.");
+    let title = prettyTitle(file.name);
+    if(blocks.length > 1 && blocks[0].type === "h" && blocks[0].text.length < 140) title = blocks.shift().text;
+    $("body").value = blocksToMarkup(blocks);
+    $("title").value = title;
+    $("fname").value = "";
+    sourceFile = file.name;
+    $("srcName").textContent = file.name;
+    $("srcMeta").textContent = `${(file.size/1024).toFixed(file.size < 10240 ? 1 : 0)} KB · ${blocks.length} parts read`;
+    zone.classList.add("loaded");
+    setMakeLabel();
+    setStatus("File loaded. Now pick the format to convert to on the ball, then press Convert.", "ok");
+  }catch(err){
+    console.error(err);
+    setStatus("Could not read " + file.name + ": " + (err && err.message || "unknown error"), "err");
+    $("srcName").textContent = sourceFile || "No file chosen";
+  }finally{
+    zone.classList.remove("busy");
+    $("file").value = "";
+  }
+}
+$("file").addEventListener("change", e=> takeFile(e.target.files && e.target.files[0]));
+$("clearFile").addEventListener("click", ()=>{
+  sourceFile = null; $("drop").classList.remove("loaded");
+  $("srcName").textContent = "No file chosen"; $("srcMeta").textContent = "PDF, Word, Excel, PowerPoint, CSV, text, Markdown, HTML";
+  setMakeLabel(); setStatus("");
+});
+const dropZone = $("drop");
+["dragenter","dragover"].forEach(ev=> dropZone.addEventListener(ev, e=>{ e.preventDefault(); dropZone.classList.add("over"); }));
+["dragleave","drop"].forEach(ev=> dropZone.addEventListener(ev, e=>{ e.preventDefault(); dropZone.classList.remove("over"); }));
+dropZone.addEventListener("drop", e=> takeFile(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]));
+
+/* ---------- fonts ---------- */
+const FONT_STACK = {helvetica:"sans-serif", times:"serif", courier:"monospace"};
+function getStyle(){ const [font, pdf] = $("font").value.split("|"); return {font, pdf, scale:parseFloat($("size").value) || 1}; }
+function updateFontUI(){
+  const st = getStyle(), pv = $("fontPreview");
+  pv.style.fontFamily = `"${st.font}", ${FONT_STACK[st.pdf]}`;
+  pv.style.fontSize = (18*st.scale) + "px";
+  const row = $("fontRow"), note = $("fontNote");
+  if(current === "pdf"){ row.classList.remove("off"); note.textContent = "PDF uses the closest built-in font: " + {helvetica:"Helvetica", times:"Times", courier:"Courier"}[st.pdf] + "."; }
+  else if(current === "docx" || current === "pptx"){ row.classList.remove("off"); note.textContent = "The file uses " + st.font + ". It shows exactly on devices that have this font installed."; }
+  else { row.classList.add("off"); note.textContent = FORMATS[current].name + " files don't store fonts, so this setting is skipped."; }
+  try { localStorage.setItem("kd-font", $("font").value); localStorage.setItem("kd-size", $("size").value); } catch(e){}
+}
+try { const f = localStorage.getItem("kd-font"), z = localStorage.getItem("kd-size"); if(f && [...$("font").options].some(o=>o.value===f)) $("font").value = f; if(z && [...$("size").options].some(o=>o.value===z)) $("size").value = z; } catch(e){}
+$("font").addEventListener("change", updateFontUI); $("size").addEventListener("change", updateFontUI);
+updateFontUI();
+
+/* ---------- saving ---------- */
+let dlPromise = null;
+function downloadsNS(){
+  if(!dlPromise) dlPromise = (window.claude && typeof window.claude.use === "function") ? window.claude.use("downloads").catch(()=>null) : Promise.resolve(null);
+  return dlPromise;
+}
+async function saveFile(filename, data){
+  const dl = await downloadsNS();
+  if(dl){
+    try { await dl.save({filename, data}); return {ok:true}; }
+    catch(e){
+      const code = e && e.code;
+      if(code === "declined") return {ok:false, msg:"Save cancelled. Tap the button again whenever you are ready."};
+      if(code === "rate_limited") return {ok:false, msg:"A save prompt is already open. Finish that one first."};
+      return {ok:false, msg:"Saving files is not available in this view. Open the app in a browser to save."};
+    }
+  }
+  // standalone web app: share sheet on iPhone/iPad ("Save to Files"), normal download elsewhere
+  const MIME = {pdf:"application/pdf", docx:"application/vnd.openxmlformats-officedocument.wordprocessingml.document", xlsx:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", pptx:"application/vnd.openxmlformats-officedocument.presentationml.presentation", csv:"text/csv", md:"text/markdown"};
+  const type = MIME[filename.split(".").pop()] || "application/octet-stream";
+  const blob = new Blob([data], {type});
+  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if(isIOS && navigator.canShare){
+    const file = new File([blob], filename, {type});
+    if(navigator.canShare({files:[file]})){
+      try { await navigator.share({files:[file]}); return {ok:true}; }
+      catch(e){ if(e && e.name === "AbortError") return {ok:false, msg:"Save cancelled. Tap the button again whenever you are ready."}; }
+    }
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 4000);
+  return {ok:true};
+}
+
+$("form").addEventListener("submit", async e=>{
+  e.preventDefault();
+  const key = current, f = FORMATS[key], btn = $("make");
+  const title = $("title").value.trim() || "Untitled document";
+  const d = {title, author:$("author").value.trim(), date:today(), blocks:parse($("body").value), style:getStyle(), theme:SCHEMES[schemeKey].doc};
+  const filename = slug($("fname").value.trim() || title) + "." + f.ext;
+  btn.disabled = true; btn.textContent = (sourceFile ? "Converting to " : "Making ") + f.label + "…"; setStatus("");
+  try{
+    await loadLib(key);
+    const data = await BUILD[key](d);
+    const r = await saveFile(filename, data);
+    r.ok ? setStatus("Saved " + filename, "ok") : setStatus(r.msg, "err");
+  }catch(err){
+    console.error(err);
+    setStatus("Could not make the " + f.label + ": " + (err && err.message || "unknown error"), "err");
+  }finally{
+    btn.disabled = false; setMakeLabel();
+  }
+});
+})();
+</script>
+
+<script>
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  addEventListener("load", ()=> navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+</script>
+</body>
+</html>
