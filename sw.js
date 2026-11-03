@@ -1,5 +1,5 @@
 // Kickoff Docs offline cache. Bump VERSION whenever you change any file.
-const VERSION = "kickoff-docs-v1";
+const VERSION = "kickoff-docs-v2";
 const FILES = [
   "./",
   "index.html",

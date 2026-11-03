@@ -1,7 +1,7 @@
 {
   "name": "Kickoff Docs",
   "short_name": "Kickoff Docs",
-  "description": "Make or convert PDF, Word, Excel, PowerPoint, CSV and Markdown files in one click. Works offline.",
+  "description": "Make, convert and view PDF, Word, Excel, PowerPoint, CSV and Markdown files. Works offline.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Kickoff Docs</title>
-<meta name="description" content="Make or convert PDF, Word, Excel, PowerPoint, CSV and Markdown files in one click. Works offline.">
+<meta name="description" content="Make, convert and view PDF, Word, Excel, PowerPoint, CSV and Markdown files. Works offline.">
 <meta name="theme-color" content="#2a0709">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png" type="image/png">
@@ -53,13 +53,34 @@ header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
 h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,5vw,44px);line-height:1;letter-spacing:.01em;text-transform:uppercase;margin:0;text-wrap:balance}
 h1 span{color:var(--gold)}
 .champ{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0 0 6px}
-.schemes{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0}
-.schemes > span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:2px}
-.scheme{display:inline-flex;align-items:center;gap:7px;font:inherit;font-size:14px;font-weight:500;color:var(--chalk);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px 5px 6px;cursor:pointer}
-.scheme i{width:20px;height:20px;border-radius:50%;background:var(--sw);box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
-.scheme[aria-pressed="true"]{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
-.scheme{flex:none}
-@media (max-width:640px){.schemes{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.schemes::-webkit-scrollbar{display:none}}
+.schemes{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0}
+.schemes label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.schemes select{width:auto;min-width:220px;max-width:100%}
+.swatch{width:28px;height:28px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+/* editor */
+.editorwrap{display:flex;flex-direction:column;min-width:0}
+.elabel{font-size:13px;color:var(--muted);font-weight:500;margin-bottom:5px}
+.etools{display:flex;flex-wrap:wrap;align-items:center;gap:4px;padding:6px;background:var(--pitch);border:1px solid var(--line);border-bottom:0;border-radius:9px 9px 0 0}
+.etools button,.etools select{font:inherit;font-size:14px;color:var(--chalk);background:var(--surface);border:1px solid var(--line);border-radius:6px;height:34px;min-width:34px;padding:0 8px;cursor:pointer;width:auto}
+.etools select{padding:0 6px}
+.etools button[aria-pressed="true"]{background:var(--gold);color:var(--accent-ink);border-color:transparent}
+.etools .sep{width:1px;align-self:stretch;background:var(--line);margin:3px 2px}
+.ecolor{display:inline-flex}
+#eColorBtn{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-weight:700;border-radius:6px 0 0 6px;line-height:1}
+#eColorBtn i{display:block;width:16px;height:4px;border-radius:1px}
+#eColor{width:32px;height:34px;padding:3px;border:1px solid var(--line);border-left:0;border-radius:0 6px 6px 0;background:var(--surface);cursor:pointer;min-width:0}
+/* the page itself is paper-white in every theme, so it previews the real document */
+.editor{background:#ffffff;color:#1b1b1b;border:1px solid var(--line);border-radius:0 0 9px 9px;padding:18px 20px;min-height:300px;max-height:65vh;overflow:auto;font-size:15px;line-height:1.55;outline:none;overflow-wrap:anywhere;-webkit-user-select:text;user-select:text}
+.editor:focus-visible{box-shadow:0 0 0 2px var(--gold)}
+.editor h1,.editor h2,.editor h3{font-family:inherit;font-weight:700;text-transform:none;letter-spacing:normal;color:var(--doccolor,#111111);margin:.8em 0 .3em;line-height:1.2}
+.editor h1{font-size:1.45em}.editor h2{font-size:1.2em}.editor h3{font-size:1.05em}
+.editor p{margin:0 0 .6em}
+.editor ul,.editor ol{margin:0 0 .6em;padding-left:1.5em}
+.editor table{border-collapse:collapse;width:100%;margin:.4em 0 .9em;font-size:.95em}
+.editor th,.editor td{border:1px solid #cccccc;padding:5px 8px;text-align:left;min-width:3em}
+.editor th{background:var(--docfill,#efefef)}
+.editor > :first-child{margin-top:0}
+.editor:empty::before{content:attr(data-placeholder);color:#8a8a8a}
 .champ i{display:inline-block;width:22px;height:14px;border-radius:2px;background:var(--flag)}
 .tag{color:var(--muted);margin:0;font-size:14px;max-width:46ch}
 .grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:start}
@@ -73,8 +94,8 @@ h1 span{color:var(--gold)}
 .stage::before{content:"";position:absolute;left:50%;top:50%;width:min(78%,420px);aspect-ratio:1;max-width:100%;transform:translate(-50%,-50%);border:2px solid var(--stage-line);border-radius:50%}
 .stage::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--stage-line);opacity:.75;transform:translateX(-1px)}
 .glow{position:absolute;inset:0;background:radial-gradient(60% 50% at 50% 42%,var(--glow),transparent 70%);pointer-events:none}
-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:2;cursor:grab}
-canvas:active{cursor:grabbing}
+#ball{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:2;cursor:grab}
+#ball:active{cursor:grabbing}
 .shadow{position:absolute;left:0;top:0;width:40%;height:6%;background:radial-gradient(closest-side,rgba(0,0,0,.55),transparent);z-index:1;pointer-events:none}
 .labels{position:absolute;inset:0;z-index:3;pointer-events:none}
 .lbl{position:absolute;left:0;top:0;font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.06em;color:#fff;background:none;border:0;padding:6px 8px;text-shadow:0 1px 2px rgba(0,0,0,.6);cursor:pointer;will-change:transform,opacity}
@@ -130,9 +151,43 @@ input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px soli
 .drop:not(.loaded) .clearfile{display:none}
 select{font:inherit;font-size:16px;color:var(--chalk);background:var(--pitch);border:1px solid var(--line);border-radius:9px;padding:9px 11px;width:100%;min-width:0}
 .fontrow{display:grid;grid-template-columns:1.4fr 1fr;gap:8px 10px;min-width:0}
-.fontrow .preview{grid-column:1/-1;margin:0;padding:10px 12px;border-radius:9px;background:#ffffff;color:#1b1b1b;box-shadow:inset 0 0 0 1px var(--line);font-size:18px;line-height:1.3;overflow-wrap:anywhere}
+.fontrow .colorlbl{grid-column:1/-1}
+.colorpick{display:flex;gap:8px;align-items:stretch}
+.colorpick select{flex:1}
+.colorpick input[type=color]{flex:none;width:52px;height:auto;min-height:42px;padding:4px;border-radius:9px;border:1px solid var(--line);background:var(--pitch);cursor:pointer}
+.fontrow .preview{display:flex;flex-direction:column;gap:2px;position:relative;grid-column:1/-1;margin:0;padding:10px 12px 14px;border-radius:9px;background:#ffffff;color:#1b1b1b;box-shadow:inset 0 0 0 1px var(--line);font-size:18px;line-height:1.3;overflow-wrap:anywhere}
 .fontrow .fontnote{grid-column:1/-1;margin:-2px 0 0;font-size:12.5px;color:var(--muted)}
+.fontrow .preview b{font-weight:700;font-size:1.05em}
+.fontrow .preview i{position:absolute;left:12px;right:12px;bottom:7px;height:3px;border-radius:2px}
 .fontrow.off label,.fontrow.off .preview{opacity:.45}
+.headside{display:flex;flex-direction:column;align-items:flex-start;gap:10px;max-width:46ch}
+.viewpdf{position:relative;display:inline-flex;flex-direction:row;align-items:center;gap:8px;font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--chalk);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 14px 7px 10px;cursor:pointer}
+.viewpdf:hover{border-color:var(--gold)}
+.viewpdf:focus-within{outline:2px solid var(--gold);outline-offset:2px}
+.viewpdf input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.viewpdf svg{width:18px;height:18px;stroke:var(--gold)}
+.viewbtn{flex:none;font:inherit;font-size:13px;font-weight:600;color:var(--chalk);background:none;border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer}
+.viewbtn:hover{border-color:var(--gold)}
+.actions{display:flex;gap:10px}
+.actions .make{flex:1}
+.previewbtn{flex:none;font-family:var(--display);font-weight:800;font-size:18px;letter-spacing:.05em;text-transform:uppercase;color:var(--chalk);background:none;border:1.5px solid var(--pick);border-radius:12px;padding:0 18px;cursor:pointer}
+.previewbtn[disabled]{opacity:.6;cursor:progress}
+/* PDF viewer: fixed neutral reading backdrop so pages look like paper in every scheme */
+.viewer[hidden]{display:none}
+.viewer{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;background:#2c2e33}
+.vbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding-top:calc(10px + env(safe-area-inset-top,0px));padding-bottom:10px;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));background:var(--surface);border-bottom:1px solid var(--line);color:var(--chalk)}
+.vname{flex:1 1 160px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.vgroup{display:flex;align-items:center;gap:4px}
+.vbar button{font:inherit;font-weight:600;color:var(--chalk);background:var(--pitch);border:1px solid var(--line);border-radius:8px;min-width:38px;height:36px;padding:0 10px;cursor:pointer}
+.vbar button:disabled{opacity:.4;cursor:default}
+.vbar button.vprimary{background:var(--gold);color:var(--accent-ink);border-color:transparent}
+.vnum,.vzoomlbl{min-width:64px;text-align:center;font-variant-numeric:tabular-nums;font-size:14px}
+.vzoomlbl{min-width:48px;color:var(--muted)}
+.vpages{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:16px 12px calc(24px + env(safe-area-inset-bottom,0px));overscroll-behavior:contain}
+.vbox{margin:0 auto 14px;background:#ffffff;box-shadow:0 2px 14px rgba(0,0,0,.45);flex:none}
+.vbox canvas{display:block;width:100%;height:100%}
+.vmsg{color:#e8e8ea;text-align:center;margin:40px auto;max-width:40ch}
+@media (max-width:560px){.vgroup.vz .vzoomlbl{display:none}}
 .steps{display:flex;gap:6px 14px;flex-wrap:wrap;margin:0;padding:0;list-style:none;font-size:12.5px;color:var(--muted)}
 .steps li b{color:var(--gold);font-family:var(--display);font-weight:800;margin-right:4px}
 @media (max-width:420px){.drop{flex-wrap:wrap}.drop .txt{flex-basis:calc(100% - 50px)}}
@@ -145,10 +200,13 @@ select{font:inherit;font-size:16px;color:var(--chalk);background:var(--pitch);bo
 <div class="wrap">
   <header>
     <div><p class="champ"><i></i><span id="champText">Spain · 2026 world champions</span></p><h1>Kickoff <span>Docs</span></h1></div>
-    <p class="tag">Write something or open a file, spin the ball to pick PDF, Word, Excel or PowerPoint, and make it in one click.</p>
+    <div class="headside">
+      <p class="tag">Write something or open a file, spin the ball to pick PDF, Word, Excel or PowerPoint, and make it in one click.</p>
+      <label class="viewpdf" for="vFile"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Open PDF viewer<input id="vFile" type="file" accept=".pdf,application/pdf"></label>
+    </div>
   </header>
 
-  <div class="schemes" id="schemes" role="group" aria-label="Colour scheme"><span>Colours</span></div>
+  <div class="schemes"><label for="themeSel">App theme</label><span class="swatch" id="themeSwatch" aria-hidden="true"></span><select id="themeSel"></select></div>
 
   <div class="grid">
     <section aria-label="Pick a format">
@@ -176,6 +234,7 @@ select{font:inherit;font-size:16px;color:var(--chalk);background:var(--pitch);bo
       <div class="drop" id="drop">
         <span class="ico" aria-hidden="true"></span>
         <span class="txt"><b id="srcName">No file chosen</b><small id="srcMeta">PDF, Word, Excel, PowerPoint, CSV, text, Markdown, HTML</small></span>
+        <button class="viewbtn" id="viewFile" type="button" hidden>View</button>
         <button class="clearfile" id="clearFile" type="button">Clear</button>
         <label class="pickfile" for="file">Choose file<input id="file" type="file" accept=".pdf,.docx,.xlsx,.xls,.xlsm,.ods,.pptx,.csv,.tsv,.txt,.md,.markdown,.html,.htm,.json,text/plain,text/csv,application/pdf"></label>
       </div>
@@ -184,7 +243,7 @@ select{font:inherit;font-size:16px;color:var(--chalk);background:var(--pitch);bo
         <label for="author">Author<input id="author" value="Coach M. Okafor"></label>
       </div>
       <div class="fontrow" id="fontRow">
-        <label for="font">Font
+        <label for="font">Document font
           <select id="font">
             <option value="Calibri|helvetica">Calibri</option>
             <option value="Arial|helvetica">Arial</option>
@@ -206,34 +265,65 @@ select{font:inherit;font-size:16px;color:var(--chalk);background:var(--pitch);bo
             <option value="1.4">Extra large</option>
           </select>
         </label>
-        <p class="preview" id="fontPreview">Aa · Ana Ruiz scored 14 goals this season.</p>
+        <label for="docColor" class="colorlbl">Document colour
+          <span class="colorpick">
+            <select id="docColor">
+              <option value="#111111">Black &amp; white</option>
+              <option value="#1f3a68">Navy</option>
+              <option value="#2563c9">Blue</option>
+              <option value="#0f766e">Teal</option>
+              <option value="#2f6b2f">Forest green</option>
+              <option value="#8e1b2b">Burgundy</option>
+              <option value="#c2410c">Orange</option>
+              <option value="#6d28d9">Purple</option>
+              <option value="#be185d">Pink</option>
+              <option value="#4b5563">Grey</option>
+              <option value="custom">Custom colour…</option>
+            </select>
+            <input id="docColorCustom" type="color" value="#1f3a68" aria-label="Pick a custom document colour">
+          </span>
+        </label>
+        <div class="preview" id="fontPreview"><b id="pvHead">Season at a glance</b><span>Ana Ruiz scored 14 goals this season.</span><i id="pvRule"></i></div>
         <p class="fontnote" id="fontNote"></p>
       </div>
       <label for="fname">File name<input id="fname" placeholder="riverside-rovers-spring-season-review"></label>
-      <label for="body">Content
-        <textarea id="body" spellcheck="true"># Season at a glance
-We finished 2nd in the Sunday League Division 2 with 13 wins, 3 draws and 2 losses from 18 matches.
-- Promotion secured with two games to spare
-- Best defensive record in the division: 14 goals conceded
-- Youth players made 41 appearances
-
-# Top scorers
-Player | Matches | Goals | Assists
-Ana Ruiz | 18 | 14 | 6
-Sam Patel | 17 | 9 | 8
-Leo Grant | 15 | 7 | 3
-Mia Osei | 18 | 4 | 11
-
-# Plans for autumn
-- Second training night on Thursdays from September
-- New away kit ordered, arriving August
-- Pre-season friendly vs. Harbour FC on 23 August</textarea>
-      </label>
-      <p class="help">Start a line with <code>#</code> for a heading, <code>-</code> for a bullet, and put <code>|</code> between table cells. Tables become sheets in Excel and slides in PowerPoint.</p>
-      <button class="make" id="make" type="submit">Make PDF</button>
+      <div class="editorwrap">
+        <span class="elabel" id="bodyLabel">Content</span>
+        <div class="etools" role="toolbar" aria-label="Text formatting">
+          <select id="eBlock" aria-label="Text style"><option value="p">Normal text</option><option value="h1">Heading 1</option><option value="h2">Heading 2</option><option value="h3">Heading 3</option></select>
+          <span class="sep"></span>
+          <button type="button" data-cmd="bold" data-state aria-pressed="false" aria-label="Bold" title="Bold (Ctrl+B)"><b>B</b></button>
+          <button type="button" data-cmd="italic" data-state aria-pressed="false" aria-label="Italic" title="Italic (Ctrl+I)"><i>I</i></button>
+          <button type="button" data-cmd="underline" data-state aria-pressed="false" aria-label="Underline" title="Underline (Ctrl+U)"><u>U</u></button>
+          <span class="ecolor"><button type="button" id="eColorBtn" aria-label="Apply text colour" title="Text colour">A<i id="eColorBar"></i></button><input id="eColor" type="color" value="#c62828" aria-label="Choose text colour"></span>
+          <span class="sep"></span>
+          <button type="button" data-cmd="insertUnorderedList" aria-label="Bulleted list" title="Bulleted list">• List</button>
+          <button type="button" data-cmd="insertOrderedList" aria-label="Numbered list" title="Numbered list">1. List</button>
+          <button type="button" id="eTable" aria-label="Insert table" title="Insert table">Table</button>
+          <span class="sep"></span>
+          <button type="button" data-cmd="removeFormat" aria-label="Clear formatting" title="Clear formatting">Clear</button>
+          <button type="button" data-cmd="undo" aria-label="Undo" title="Undo">↶</button>
+          <button type="button" data-cmd="redo" aria-label="Redo" title="Redo">↷</button>
+        </div>
+        <div class="editor" id="body" contenteditable="true" role="textbox" aria-multiline="true" aria-labelledby="bodyLabel" spellcheck="true" data-placeholder="Start typing your document…"><h1>Season at a glance</h1><p>We finished <b>2nd</b> in the Sunday League Division 2 with 13 wins, 3 draws and 2 losses from 18 matches.</p><ul><li>Promotion secured with <b>two games to spare</b></li><li>Best defensive record in the division: <i>14 goals conceded</i></li><li>Youth players made <font color="#0f766e">41 appearances</font></li></ul><h1>Top scorers</h1><table><tbody><tr><th>Player</th><th>Matches</th><th>Goals</th><th>Assists</th></tr><tr><td>Ana Ruiz</td><td>18</td><td>14</td><td>6</td></tr><tr><td>Sam Patel</td><td>17</td><td>9</td><td>8</td></tr><tr><td>Leo Grant</td><td>15</td><td>7</td><td>3</td></tr><tr><td>Mia Osei</td><td>18</td><td>4</td><td>11</td></tr></tbody></table><h1>Plans for autumn</h1><ol><li>Second training night on <u>Thursdays</u> from September</li><li>New away kit ordered, arriving August</li><li>Pre-season friendly vs. Harbour FC on <b>23 August</b></li></ol></div>
+      </div>
+      <p class="help">Format text with the toolbar, just like in Word. Each heading starts a new slide in PowerPoint, and tables become sheets in Excel.</p>
+      <div class="actions"><button class="make" id="make" type="submit">Make PDF</button><button class="previewbtn" id="preview" type="button">Preview</button></div>
       <p class="status" id="status" role="status" aria-live="polite"></p>
     </form>
   </div>
+</div>
+
+<div class="viewer" id="viewer" hidden role="dialog" aria-modal="true" aria-label="PDF viewer">
+  <div class="vbar">
+    <button id="vClose" type="button" aria-label="Close viewer">✕</button>
+    <b class="vname" id="vName">document.pdf</b>
+    <div class="vgroup"><button id="vPrev" type="button" aria-label="Previous page">‹</button><span class="vnum" id="vNum">1 / 1</span><button id="vNext" type="button" aria-label="Next page">›</button></div>
+    <div class="vgroup vz"><button id="vOut" type="button" aria-label="Zoom out">−</button><span class="vzoomlbl" id="vZoomLbl">100%</span><button id="vIn" type="button" aria-label="Zoom in">+</button><button id="vFit" type="button">Fit</button></div>
+    <button id="vConvert" type="button" class="vprimary" hidden>Convert</button>
+    <button id="vSave" type="button" class="vprimary" hidden>Save</button>
+  </div>
+  <div class="vpages" id="vPages"></div>
 </div>
 
 <script src="libs/three.min.js"></script>
@@ -270,30 +360,48 @@ function loadLib(key){
 
 /* ---------- colour schemes ---------- */
 const SCHEMES = {
-  spain: {name:"Spain", badge:"Spain · 2026 world champions", sw:"linear-gradient(#c60b1e 0 30%,#ffc400 30% 70%,#c60b1e 70%)", dark:true,
+  spain: {group:"Countries", name:"Spain", badge:"Spain · 2026 world champions", sw:"linear-gradient(#c60b1e 0 30%,#ffc400 30% 70%,#c60b1e 70%)", dark:true,
     ui:{pitch:"#2a0709","pitch-2":"#360a0d",surface:"#1e0406",line:"#5e1c20",chalk:"#fbf3e4",muted:"#d8b8a6",gold:"#ffc400","accent-ink":"#2a0709","stage-line":"rgba(255,196,0,.28)",glow:"rgba(255,214,120,.14)","modes-bg":"rgba(30,4,6,.72)","drop-over":"#3a0b0e",ok:"#ffc400",err:"#ff9d8f",flag:"linear-gradient(#c60b1e 0 25%,#ffc400 25% 75%,#c60b1e 75%)"},
-    ball:[[1.0,0.78,0.25],[0.12,0.03,0.04],[0.98,0.95,0.88]],
-    doc:{h:"8E0C17",rule:"C60B1E",acc:"FFC400",fill:"FFF0C4",border:"E6CFB0",slideBg:"8E0C17",slideText:"FBF3E4",slideSub:"FFD9A0"}},
-  calm: {name:"Calm", badge:"Calm · soft sky and mist", sw:"linear-gradient(135deg,#a9c6e0,#d9d4ec)", dark:false,
+    ball:[[1.0,0.78,0.25],[0.12,0.03,0.04],[0.98,0.95,0.88]]},
+  calm: {group:"Moods", name:"Calm", badge:"Calm · soft sky and mist", sw:"linear-gradient(135deg,#a9c6e0,#d9d4ec)", dark:false,
     ui:{pitch:"#eef2f6","pitch-2":"#e7ecf2",surface:"#ffffff",line:"#d3dce6",chalk:"#1f2a37",muted:"#5f6e80",gold:"#4f7fa8","accent-ink":"#ffffff","stage-line":"rgba(79,127,168,.30)",glow:"rgba(255,255,255,.6)","modes-bg":"rgba(255,255,255,.85)","drop-over":"#e3edf7",ok:"#2f6d4f",err:"#b3402f",flag:"linear-gradient(90deg,#a9c6e0 0 50%,#d9d4ec 50%)"},
-    ball:[[0.65,0.78,0.95],[0.25,0.32,0.42],[0.97,0.98,1.0]],
-    doc:{h:"3E6A93",rule:"4F7FA8",acc:"A9C6E0",fill:"E8F0F8",border:"CBD8E6",slideBg:"3E6A93",slideText:"FFFFFF",slideSub:"D7E5F2"}},
-  nature: {name:"Nature", badge:"Nature · moss and wheat", sw:"linear-gradient(135deg,#6a8f3a,#c8a052)", dark:false,
+    ball:[[0.65,0.78,0.95],[0.25,0.32,0.42],[0.97,0.98,1.0]]},
+  nature: {group:"Moods", name:"Nature", badge:"Nature · moss and wheat", sw:"linear-gradient(135deg,#6a8f3a,#c8a052)", dark:false,
     ui:{pitch:"#eceadb","pitch-2":"#e4e2d0",surface:"#f8f7ef",line:"#d2d2bb",chalk:"#2d3824",muted:"#68705a",gold:"#5f8434","accent-ink":"#ffffff","stage-line":"rgba(95,132,52,.32)",glow:"rgba(255,250,225,.55)","modes-bg":"rgba(248,247,239,.88)","drop-over":"#e4ead2",ok:"#4c6e26",err:"#a8452c",flag:"linear-gradient(90deg,#6a8f3a 0 50%,#c8a052 50%)"},
-    ball:[[0.95,0.85,0.55],[0.18,0.22,0.12],[0.97,0.96,0.9]],
-    doc:{h:"4E6B2A",rule:"6A8F3A",acc:"C8A052",fill:"EEF0DD",border:"D3D7BC",slideBg:"4E6B2A",slideText:"FFFFFF",slideSub:"E9DDB8"}},
-  jungle: {name:"Jungle", badge:"Jungle · canopy and toucan", sw:"linear-gradient(135deg,#123d22,#2fbf71 60%,#f2a71b 60%)", dark:true,
+    ball:[[0.95,0.85,0.55],[0.18,0.22,0.12],[0.97,0.96,0.9]]},
+  jungle: {group:"Moods", name:"Jungle", badge:"Jungle · canopy and toucan", sw:"linear-gradient(135deg,#123d22,#2fbf71 60%,#f2a71b 60%)", dark:true,
     ui:{pitch:"#0f2416","pitch-2":"#132c1b",surface:"#0a1b10",line:"#2b4a33",chalk:"#eef4e6",muted:"#a9bea6",gold:"#f2a71b","accent-ink":"#1a1003","stage-line":"rgba(47,191,113,.28)",glow:"rgba(150,255,170,.10)","modes-bg":"rgba(8,22,13,.75)","drop-over":"#183a23",ok:"#7fe0a5",err:"#ff9d8f",flag:"linear-gradient(90deg,#2fbf71 0 50%,#f2a71b 50%)"},
-    ball:[[0.45,1.0,0.6],[0.04,0.1,0.05],[0.96,0.97,0.9]],
-    doc:{h:"1F5130",rule:"2FBF71",acc:"F2A71B",fill:"FDEFD2",border:"D9E3D0",slideBg:"1F5130",slideText:"EEF4E6",slideSub:"F7D58F"}},
-  australia: {name:"Australia", badge:"Australia · green and gold", sw:"linear-gradient(135deg,#00843d 50%,#ffcd00 50%)", dark:true,
+    ball:[[0.45,1.0,0.6],[0.04,0.1,0.05],[0.96,0.97,0.9]]},
+  australia: {group:"Countries", name:"Australia", badge:"Australia · green and gold", sw:"linear-gradient(135deg,#00843d 50%,#ffcd00 50%)", dark:true,
     ui:{pitch:"#062a1b","pitch-2":"#083322",surface:"#041d13",line:"#1f5038",chalk:"#fff8e1",muted:"#c4d3bc",gold:"#ffcd00","accent-ink":"#06281a","stage-line":"rgba(255,205,0,.26)",glow:"rgba(255,230,140,.12)","modes-bg":"rgba(4,24,15,.75)","drop-over":"#0d3a26",ok:"#ffcd00",err:"#ff9d8f",flag:"linear-gradient(90deg,#00843d 0 50%,#ffcd00 50%)"},
-    ball:[[1.0,0.85,0.2],[0.02,0.12,0.07],[0.99,0.97,0.88]],
-    doc:{h:"00843D",rule:"00843D",acc:"FFCD00",fill:"FFF5C2",border:"D8E2C8",slideBg:"00843D",slideText:"FFFFFF",slideSub:"FFE680"}},
-  india: {name:"India", badge:"India · saffron, white and green", sw:"linear-gradient(#ff9933 0 33%,#ffffff 33% 67%,#138808 67%)", dark:false,
+    ball:[[1.0,0.85,0.2],[0.02,0.12,0.07],[0.99,0.97,0.88]]},
+  india: {group:"Countries", name:"India", badge:"India · saffron, white and green", sw:"linear-gradient(#ff9933 0 33%,#ffffff 33% 67%,#138808 67%)", dark:false,
     ui:{pitch:"#fff6ec","pitch-2":"#fdefe0",surface:"#ffffff",line:"#f0d8bd",chalk:"#1b2559",muted:"#646a85",gold:"#f08a1c","accent-ink":"#1d1203","stage-line":"rgba(19,136,8,.30)",glow:"rgba(255,255,255,.7)","modes-bg":"rgba(255,255,255,.88)","drop-over":"#ffe9d1",ok:"#138808",err:"#b3261e",flag:"linear-gradient(#ff9933 0 33%,#ffffff 33% 67%,#138808 67%)"},
-    ball:[[1.0,0.7,0.35],[0.1,0.14,0.36],[1.0,0.99,0.96]],
-    doc:{h:"1B2559",rule:"FF9933",acc:"138808",fill:"FFEBD6",border:"EFD3B6",slideBg:"1B2559",slideText:"FFFFFF",slideSub:"FFC58A"}}
+    ball:[[1.0,0.7,0.35],[0.1,0.14,0.36],[1.0,0.99,0.96]]},
+  ocean: {name:"Ocean", group:"Moods", badge:"Ocean · deep blue and surf", sw:"linear-gradient(135deg,#0a4d7a 50%,#3ec7e0 50%)", dark:true,
+    ui:{pitch:"#071d2b","pitch-2":"#0a2536",surface:"#05151f",line:"#1d4560",chalk:"#e6f3fb",muted:"#9fbfd3",gold:"#3ec7e0","accent-ink":"#04202a","stage-line":"rgba(62,199,224,.28)",glow:"rgba(120,220,255,.12)","modes-bg":"rgba(5,21,31,.75)","drop-over":"#0d3248",ok:"#6fe0c8",err:"#ff9d8f",flag:"linear-gradient(90deg,#0a4d7a 0 50%,#3ec7e0 50%)"},
+    ball:[[0.4,0.85,1.0],[0.02,0.08,0.14],[0.95,0.98,1.0]]},
+  sunset: {name:"Sunset", group:"Moods", badge:"Sunset · plum and apricot", sw:"linear-gradient(135deg,#b04a8f 50%,#ff8a4c 50%)", dark:true,
+    ui:{pitch:"#2a1430","pitch-2":"#331838",surface:"#1f0e24",line:"#563060",chalk:"#fff0e6",muted:"#d9b6c6",gold:"#ff8a4c","accent-ink":"#2a0f05","stage-line":"rgba(255,138,76,.28)",glow:"rgba(255,170,120,.14)","modes-bg":"rgba(31,14,36,.75)","drop-over":"#3d1d45",ok:"#ffb38a",err:"#ff9d8f",flag:"linear-gradient(90deg,#b04a8f 0 50%,#ff8a4c 50%)"},
+    ball:[[1.0,0.6,0.4],[0.12,0.04,0.12],[1.0,0.96,0.92]]},
+  rose: {name:"Rose", group:"Moods", badge:"Rose · blush and berry", sw:"linear-gradient(135deg,#f6c1d1 50%,#c2185b 50%)", dark:false,
+    ui:{pitch:"#fbf0f2","pitch-2":"#f7e6ea",surface:"#ffffff",line:"#efd0d8",chalk:"#3a1f28",muted:"#85606c",gold:"#c2185b","accent-ink":"#ffffff","stage-line":"rgba(194,24,91,.22)",glow:"rgba(255,255,255,.6)","modes-bg":"rgba(255,255,255,.9)","drop-over":"#fbe0e8",ok:"#2e7d4f",err:"#b3261e",flag:"linear-gradient(90deg,#c2185b 0 50%,#f6c1d1 50%)"},
+    ball:[[1.0,0.6,0.75],[0.25,0.1,0.15],[1.0,0.98,0.98]]},
+  desert: {name:"Desert", group:"Moods", badge:"Desert · sand and terracotta", sw:"linear-gradient(135deg,#e9c27a 50%,#b8582c 50%)", dark:false,
+    ui:{pitch:"#f5ead9","pitch-2":"#efe1cc",surface:"#fbf5ec",line:"#e2cfb3",chalk:"#3b2a1a",muted:"#7e6650",gold:"#b8582c","accent-ink":"#ffffff","stage-line":"rgba(184,88,44,.25)",glow:"rgba(255,245,220,.55)","modes-bg":"rgba(251,245,236,.9)","drop-over":"#f2dfc6",ok:"#5d7a2e",err:"#a8452c",flag:"linear-gradient(90deg,#b8582c 0 50%,#e9c27a 50%)"},
+    ball:[[1.0,0.8,0.5],[0.22,0.14,0.08],[1.0,0.97,0.92]]},
+  lavender: {name:"Lavender", group:"Moods", badge:"Lavender · lilac and violet", sw:"linear-gradient(135deg,#cdbdf3 50%,#6e4bd8 50%)", dark:false,
+    ui:{pitch:"#f2effa","pitch-2":"#ebe6f6",surface:"#ffffff",line:"#dcd4ee",chalk:"#2b2440",muted:"#6c6485",gold:"#6e4bd8","accent-ink":"#ffffff","stage-line":"rgba(110,75,216,.22)",glow:"rgba(255,255,255,.6)","modes-bg":"rgba(255,255,255,.9)","drop-over":"#e9e2fa",ok:"#2e7d4f",err:"#b3261e",flag:"linear-gradient(90deg,#6e4bd8 0 50%,#cdbdf3 50%)"},
+    ball:[[0.75,0.65,1.0],[0.17,0.13,0.28],[0.99,0.98,1.0]]},
+  classic: {name:"Classic light", group:"Classic", badge:"Classic · clean light", sw:"linear-gradient(135deg,#f3f4f6 50%,#0b62d6 50%)", dark:false,
+    ui:{pitch:"#f3f4f6","pitch-2":"#eceef1",surface:"#ffffff",line:"#d9dce1",chalk:"#1d2127",muted:"#5d6470",gold:"#0b62d6","accent-ink":"#ffffff","stage-line":"rgba(11,98,214,.22)",glow:"rgba(255,255,255,.6)","modes-bg":"rgba(255,255,255,.9)","drop-over":"#e6effb",ok:"#1b7a3d",err:"#b3261e",flag:"linear-gradient(90deg,#0b62d6 0 50%,#d9dce1 50%)"},
+    ball:[[0.55,0.7,1.0],[0.15,0.17,0.2],[0.98,0.98,0.99]]},
+  midnight: {name:"Midnight", group:"Classic", badge:"Midnight · dark and quiet", sw:"linear-gradient(135deg,#0e1117 50%,#7aa2ff 50%)", dark:true,
+    ui:{pitch:"#0e1117","pitch-2":"#131722",surface:"#0a0d12",line:"#262d3b",chalk:"#e7eaf0",muted:"#9aa3b5",gold:"#7aa2ff","accent-ink":"#0a1230","stage-line":"rgba(122,162,255,.22)",glow:"rgba(160,180,255,.08)","modes-bg":"rgba(10,13,18,.78)","drop-over":"#1a2130",ok:"#8fd3a8",err:"#ff9d8f",flag:"linear-gradient(90deg,#1b2440 0 50%,#7aa2ff 50%)"},
+    ball:[[0.5,0.6,1.0],[0.04,0.05,0.08],[0.95,0.96,0.98]]},
+  graphite: {name:"Graphite", group:"Classic", badge:"Graphite · grey and mint", sw:"linear-gradient(135deg,#34363b 50%,#4fd1a5 50%)", dark:true,
+    ui:{pitch:"#1c1d20","pitch-2":"#222326",surface:"#151618",line:"#34363b",chalk:"#ececee",muted:"#a3a5ab",gold:"#4fd1a5","accent-ink":"#062a1e","stage-line":"rgba(79,209,165,.22)",glow:"rgba(255,255,255,.06)","modes-bg":"rgba(21,22,24,.8)","drop-over":"#2a2c30",ok:"#4fd1a5",err:"#ff9d8f",flag:"linear-gradient(90deg,#34363b 0 50%,#4fd1a5 50%)"},
+    ball:[[0.4,1.0,0.8],[0.06,0.06,0.07],[0.95,0.95,0.96]]}
 };
 var schemeKey = "spain";
 function applyScheme(k){
@@ -302,18 +410,17 @@ function applyScheme(k){
   for(const [name, v] of Object.entries(sc.ui)) root.setProperty("--" + name, v);
   root.setProperty("color-scheme", sc.dark ? "dark" : "light");
   $("champText").textContent = sc.badge;
-  document.querySelectorAll(".scheme").forEach(b=> b.setAttribute("aria-pressed", b.dataset.s === k ? "true" : "false"));
+  $("themeSel").value = k; $("themeSwatch").style.background = sc.sw;
   window.__kdScheme = sc.ball;
   if(ballScheme) ballScheme(...sc.ball);
   try { localStorage.setItem("kd-scheme", k); } catch(e){}
 }
-for(const [k, sc] of Object.entries(SCHEMES)){
-  const b = document.createElement("button");
-  b.type = "button"; b.className = "scheme"; b.dataset.s = k; b.style.setProperty("--sw", sc.sw);
-  b.innerHTML = `<i></i>${sc.name}`;
-  b.addEventListener("click", ()=> applyScheme(k));
-  $("schemes").appendChild(b);
+for(const g of ["Countries","Moods","Classic"]){
+  const og = document.createElement("optgroup"); og.label = g;
+  for(const [k, sc] of Object.entries(SCHEMES)) if(sc.group === g){ const o = document.createElement("option"); o.value = k; o.textContent = sc.name; og.appendChild(o); }
+  $("themeSel").appendChild(og);
 }
+$("themeSel").addEventListener("change", e=> applyScheme(e.target.value));
 try { const saved = localStorage.getItem("kd-scheme"); if(saved && SCHEMES[saved]) schemeKey = saved; } catch(e){}
 applyScheme(schemeKey);
 
@@ -329,7 +436,7 @@ KEYS.forEach(k=>{
   b.addEventListener("click", ()=> pick(k, -1));
   chips.appendChild(b);
 });
-function setMakeLabel(){ const f = FORMATS[current]; $("make").textContent = (typeof sourceFile !== "undefined" && sourceFile ? "Convert to " : "Make ") + f.label; }
+function setMakeLabel(){ const f = FORMATS[current]; const pv = $("preview"); if(pv) pv.hidden = current !== "pdf"; $("make").textContent = (typeof sourceFile !== "undefined" && sourceFile ? "Convert to " : "Make ") + f.label; }
 function updateUI(){
   const f = FORMATS[current];
   document.documentElement.style.setProperty("--pick", f.color);
@@ -668,6 +775,7 @@ const slug = s => (s||"document").toLowerCase().normalize("NFKD").replace(/[^\w\
 const today = () => new Date().toLocaleDateString(undefined, {year:"numeric", month:"long", day:"numeric"});
 
 /* ---------- builders ---------- */
+const RUNS = b => b.runs && b.runs.length ? b.runs : [{text:b.text || ""}];
 const BUILD = {
   async pdf(d){
     const {jsPDF} = window.jspdf;
@@ -676,6 +784,41 @@ const BUILD = {
     const W = doc.internal.pageSize.getWidth(), Hh = doc.internal.pageSize.getHeight(), M = 56, CW = W-2*M;
     let y = M;
     const ensure = h => { if(y+h > Hh-M){ doc.addPage(); y = M; } };
+    const FS = (bo, it) => bo && it ? "bolditalic" : bo ? "bold" : it ? "italic" : "normal";
+    const hexRgb = h => [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
+    // lays out mixed bold / italic / underline / coloured text with word wrapping
+    const writeRich = (runs, o) => {
+      const toks = [];
+      runs.forEach(r=> String(r.text).split(/(\s+)/).forEach(t=>{ if(t) toks.push({t: /^\s+$/.test(t) ? " " : t, r}); }));
+      doc.setFontSize(o.size);
+      const lines = []; let line = [], w = 0;
+      for(const tk of toks){
+        doc.setFont(F, FS(o.bold || tk.r.b, tk.r.i));
+        const tw = doc.getTextWidth(tk.t);
+        if(tk.t === " " && !line.length) continue;
+        if(tk.t !== " " && line.length && w + tw > o.width){
+          while(line.length && line[line.length-1].t === " "){ w -= line.pop().w; }
+          lines.push(line); line = []; w = 0;
+        }
+        line.push({...tk, w:tw}); w += tw;
+      }
+      if(line.length) lines.push(line);
+      if(!lines.length) lines.push([]);
+      lines.forEach((ln, li)=>{
+        ensure(o.lh);
+        if(li === 0 && o.marker){ doc.setFont(F, "normal"); doc.setTextColor(30,34,32); doc.text(o.marker, M+3, y+o.base); }
+        let cx = o.x;
+        for(const tk of ln){
+          doc.setFont(F, FS(o.bold || tk.r.b, tk.r.i));
+          const col = tk.r.color ? hexRgb(tk.r.color) : o.color;
+          doc.setTextColor(...col);
+          if(tk.t !== " ") doc.text(tk.t, cx, y+o.base);
+          if(tk.r.u){ doc.setDrawColor(...col); doc.setLineWidth(0.6); doc.line(cx, y+o.base+1.6, cx+tk.w, y+o.base+1.6); }
+          cx += tk.w;
+        }
+        y += o.lh;
+      });
+    };
     const TH = d.theme, rgb = h => [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
     doc.setFont(F,"bold"); doc.setFontSize(24*z); doc.setTextColor(...rgb(TH.h));
     doc.splitTextToSize(d.title, CW).forEach(l=>{ ensure(30*z); doc.text(l, M, y+22*z); y+=30*z; });
@@ -684,13 +827,13 @@ const BUILD = {
     doc.setDrawColor(...rgb(TH.rule)); doc.setLineWidth(2); doc.line(M, y, W-M, y); doc.setDrawColor(...rgb(TH.acc)); doc.line(M, y+2.5, W-M, y+2.5); y += 20;
     for(const b of d.blocks){
       if(b.type==="h"){
-        y += 10*z; doc.setFont(F,"bold"); doc.setFontSize((b.level===1?16:13)*z); doc.setTextColor(...rgb(TH.h));
-        doc.splitTextToSize(b.text, CW).forEach(l=>{ ensure(22*z); doc.text(l, M, y+14*z); y+=21*z; }); y += 2;
-      } else if(b.type==="p" || b.type==="li"){
-        doc.setFont(F,"normal"); doc.setFontSize(11*z); doc.setTextColor(30,34,32);
-        const ind = b.type==="li" ? 16*z : 0, lh = 16*z;
-        doc.splitTextToSize(b.text, CW-ind).forEach((l,i)=>{ ensure(lh); if(b.type==="li" && i===0) doc.text("•", M+3, y+11*z); doc.text(l, M+ind, y+11*z); y+=lh; });
-        y += (b.type==="p" ? 6 : 2)*z;
+        y += 10*z;
+        writeRich(RUNS(b), {x:M, width:CW, size:(b.level===1?16:b.level===2?13.5:12)*z, lh:21*z, base:14*z, bold:true, color:rgb(TH.h)}); y += 2;
+      } else if(b.type==="p"){
+        writeRich(RUNS(b), {x:M, width:CW, size:11*z, lh:16*z, base:11*z, color:[30,34,32]}); y += 6*z;
+      } else if(b.type==="li"){
+        const ind = 18*z;
+        writeRich(RUNS(b), {x:M+ind, width:CW-ind, size:11*z, lh:16*z, base:11*z, color:[30,34,32], marker: b.num ? b.num + "." : "•"}); y += 2*z;
       } else if(b.type==="table"){
         y += 6; const n = b.rows[0].length, cw = CW/n; doc.setFontSize(10*z);
         b.rows.forEach((r,ri)=>{
@@ -716,10 +859,13 @@ const BUILD = {
     kids.push(new D.Paragraph({text:d.title, heading:D.HeadingLevel.TITLE}));
     kids.push(new D.Paragraph({spacing:{after:240}, children:[new D.TextRun({text:[d.author,d.date].filter(Boolean).join("  ·  "), italics:true, color:"666666"})]}));
     const HL = [null, D.HeadingLevel.HEADING_1, D.HeadingLevel.HEADING_2, D.HeadingLevel.HEADING_3];
+    const RD = b => RUNS(b).map(r=>new D.TextRun({text:r.text, bold:r.b || undefined, italics:r.i || undefined, underline:r.u ? {} : undefined, color:r.color ? r.color.slice(1).toUpperCase() : undefined}));
     for(const b of d.blocks){
-      if(b.type==="h") kids.push(new D.Paragraph({text:b.text, heading:HL[b.level]}));
-      else if(b.type==="li") kids.push(new D.Paragraph({text:b.text, bullet:{level:0}}));
-      else if(b.type==="p") kids.push(new D.Paragraph({spacing:{after:120}, children:[new D.TextRun(b.text)]}));
+      if(b.type==="h") kids.push(new D.Paragraph({heading:HL[b.level], children:RD(b)}));
+      else if(b.type==="li") kids.push(b.num
+        ? new D.Paragraph({indent:{left:360, hanging:360}, spacing:{after:60}, children:[new D.TextRun(b.num + ".\t"), ...RD(b)]})
+        : new D.Paragraph({bullet:{level:0}, children:RD(b)}));
+      else if(b.type==="p") kids.push(new D.Paragraph({spacing:{after:120}, children:RD(b)}));
       else if(b.type==="table"){
         kids.push(new D.Table({width:{size:100, type:D.WidthType.PERCENTAGE},
           rows:b.rows.map((r,ri)=>new D.TableRow({tableHeader:ri===0,
@@ -786,7 +932,10 @@ const BUILD = {
       if(!textChunks.length && !tables.length) textChunks.push([]);
       textChunks.forEach((ch,ci)=>{
         const s = base(gr.title + (ci ? " (cont.)" : ""));
-        if(ch.length) s.addText(ch.map(b=>({text:b.text, options:{bullet: b.type==="li" ? {indent:20} : false, breakLine:true, paraSpaceAfter:8}})),
+        if(ch.length) s.addText(ch.flatMap(b=>{
+            const rs = RUNS(b), bullet = b.type==="li" ? (b.num ? {type:"number", indent:24} : {indent:20}) : false;
+            return rs.map((r,i)=>({text:r.text, options:Object.assign({bold:r.b || undefined, italic:r.i || undefined, underline:r.u ? {style:"sng"} : undefined, color:r.color ? r.color.slice(1).toUpperCase() : undefined, breakLine:i===rs.length-1}, i===0 ? {bullet, paraSpaceAfter:8} : {})}));
+          }),
           {x:0.6, y:1.4, w:12, h:5.3, fontFace:d.style.font, fontSize:Math.round(20*d.style.scale), color:"1E2220", valign:"top"});
       });
       for(const tb of tables){
@@ -812,18 +961,165 @@ const BUILD = {
 
   async md(d){
     const out = [`# ${d.title}`, "", `_${[d.author, d.date].filter(Boolean).join(" · ")}_`, ""];
+    const mdr = b => RUNS(b).map(r=>{
+      const m = r.text.match(/^(\s*)([\s\S]*?)(\s*)$/); let c = m[2]; if(!c) return r.text;
+      if(r.b && r.i) c = `***${c}***`; else if(r.b) c = `**${c}**`; else if(r.i) c = `*${c}*`;
+      if(r.u) c = `<u>${c}</u>`;
+      return m[1] + c + m[3];
+    }).join("");
     let prev = null;
     for(const b of d.blocks){
       if(prev==="li" && b.type!=="li") out.push("");
-      if(b.type==="h") out.push("#".repeat(Math.min(6,b.level+1))+" "+b.text, "");
-      else if(b.type==="li") out.push("- "+b.text);
-      else if(b.type==="p") out.push(b.text, "");
+      if(b.type==="h") out.push("#".repeat(Math.min(6,b.level+1))+" "+mdr(b), "");
+      else if(b.type==="li") out.push((b.num ? b.num + ". " : "- ")+mdr(b));
+      else if(b.type==="p") out.push(mdr(b), "");
       else { const r = b.rows; out.push("| "+r[0].join(" | ")+" |", "|"+r[0].map(()=>" --- ").join("|")+"|"); r.slice(1).forEach(x=>out.push("| "+x.join(" | ")+" |")); out.push(""); }
       prev = b.type;
     }
     return out.join("\n").replace(/\n{3,}/g,"\n\n") + "\n";
   }
 };
+
+/* ---------- rich text editor (Word-style) ---------- */
+const ed = $("body");
+const escH = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const colorCtx = document.createElement("canvas").getContext("2d");
+function toHex(c){
+  if(!c) return null;
+  try { colorCtx.fillStyle = "#000"; colorCtx.fillStyle = c; const v = colorCtx.fillStyle; return /^#[0-9a-f]{6}$/i.test(v) ? v.toLowerCase() : null; } catch(e){ return null; }
+}
+const BLOCK_TAGS = /^(P|DIV|H[1-6]|UL|OL|LI|TABLE|BLOCKQUOTE|PRE|SECTION|ARTICLE|HEADER|FOOTER|MAIN|TBODY|THEAD|TR)$/;
+function collectRuns(node, st, out){
+  for(const ch of node.childNodes){
+    if(ch.nodeType === 3){ const t = ch.nodeValue.replace(/\s+/g, " "); if(t) out.push({text:t, ...st}); continue; }
+    if(ch.nodeType !== 1) continue;
+    const tag = ch.tagName;
+    if(tag === "BR"){ out.push({br:true}); continue; }
+    if(/^(SCRIPT|STYLE|TEMPLATE|NOSCRIPT)$/.test(tag)) continue;
+    const s = {...st}, cs = ch.style || {};
+    if(tag === "B" || tag === "STRONG" || /^(bold|[6-9]00)$/.test(cs.fontWeight || "")) s.b = true;
+    if(cs.fontWeight === "normal" || cs.fontWeight === "400") s.b = st.forceBold || false;
+    if(tag === "I" || tag === "EM" || cs.fontStyle === "italic") s.i = true;
+    if(tag === "U" || /underline/.test(cs.textDecoration || cs.textDecorationLine || "")) s.u = true;
+    const col = (tag === "FONT" && ch.getAttribute("color")) || cs.color;
+    if(col){ const h = toHex(col); if(h) s.color = h; }
+    collectRuns(ch, s, out);
+  }
+  return out;
+}
+function tidyRuns(raw){
+  // split on <br> into separate lines, merge same-style neighbours, trim the ends
+  const lines = [[]];
+  raw.forEach(r=>{ if(r.br) lines.push([]); else lines[lines.length-1].push(r); });
+  return lines.map(rs=>{
+    const m = [];
+    rs.forEach(r=>{ const p = m[m.length-1]; if(p && !!p.b===!!r.b && !!p.i===!!r.i && !!p.u===!!r.u && p.color===r.color) p.text += r.text; else m.push({text:r.text, b:!!r.b, i:!!r.i, u:!!r.u, color:r.color}); });
+    if(m.length){ m[0].text = m[0].text.replace(/^\s+/, ""); m[m.length-1].text = m[m.length-1].text.replace(/\s+$/, ""); }
+    return m.filter(r=>r.text);
+  }).filter(rs=>rs.length);
+}
+const mkBlock = (type, runs, extra) => ({type, runs, text:runs.map(r=>r.text).join(""), ...extra});
+function editorToBlocks(root){
+  const blocks = []; let pending = [];
+  const flush = () => { if(pending.length){ tidyRuns(pending).forEach(rs=>blocks.push(mkBlock("p", rs))); pending = []; } };
+  const walk = el => {
+    for(const ch of el.childNodes){
+      if(ch.nodeType === 3 || (ch.nodeType === 1 && !BLOCK_TAGS.test(ch.tagName))){ collectRuns({childNodes:[ch]}, {}, pending); continue; }
+      if(ch.nodeType !== 1) continue;
+      flush();
+      const tag = ch.tagName;
+      if(/^H[1-6]$/.test(tag)){ tidyRuns(collectRuns(ch, {}, [])).forEach(rs=>blocks.push(mkBlock("h", rs, {level:Math.min(3, +tag[1])}))); }
+      else if(tag === "UL" || tag === "OL"){
+        let n = 0;
+        for(const li of ch.children){
+          if(li.tagName !== "LI"){ walk({childNodes:[li]}); continue; }
+          const inner = document.createElement("div"); [...li.childNodes].forEach(x=>{ if(!(x.nodeType===1 && /^(UL|OL)$/.test(x.tagName))) inner.appendChild(x.cloneNode(true)); });
+          const lines = tidyRuns(collectRuns(inner, {}, []));
+          if(lines.length){ n++; blocks.push(mkBlock("li", lines.flat(), tag === "OL" ? {num:n} : {})); }
+          [...li.children].filter(x=>/^(UL|OL)$/.test(x.tagName)).forEach(x=>walk({childNodes:[x]}));
+        }
+      }
+      else if(tag === "TABLE"){
+        const rows = [...ch.querySelectorAll("tr")].map(tr=>[...tr.children].map(td=>td.textContent.replace(/\s+/g," ").trim())).filter(r=>r.some(Boolean));
+        if(rows.length){ const w = Math.max(...rows.map(r=>r.length)); rows.forEach(r=>{ while(r.length<w) r.push(""); }); blocks.push({type:"table", rows}); }
+      }
+      else if(ch.querySelector && ch.querySelector("p,div,h1,h2,h3,h4,h5,h6,ul,ol,table,blockquote,pre")) walk(ch);
+      else tidyRuns(collectRuns(ch, {}, [])).forEach(rs=>blocks.push(mkBlock("p", rs)));
+    }
+  };
+  walk(root); flush();
+  return blocks;
+}
+function runsHTML(b){
+  const runs = b.runs && b.runs.length ? b.runs : [{text:b.text || ""}];
+  return runs.map(r=>{
+    let h = escH(r.text);
+    if(r.u) h = `<u>${h}</u>`; if(r.i) h = `<i>${h}</i>`; if(r.b) h = `<b>${h}</b>`;
+    if(r.color) h = `<font color="${r.color}">${h}</font>`;
+    return h;
+  }).join("");
+}
+function blocksToHTML(blocks){
+  const out = []; let list = null;
+  const close = () => { if(list){ out.push(`</${list}>`); list = null; } };
+  for(const b of blocks){
+    if(b.type === "li"){ const want = b.num ? "ol" : "ul"; if(list !== want){ close(); out.push(`<${want}>`); list = want; } out.push(`<li>${runsHTML(b)}</li>`); continue; }
+    close();
+    if(b.type === "h") out.push(`<h${b.level}>${runsHTML(b)}</h${b.level}>`);
+    else if(b.type === "p") out.push(`<p>${runsHTML(b)}</p>`);
+    else if(b.type === "table") out.push("<table><tbody>" + b.rows.map((r,ri)=>"<tr>" + r.map(c=>ri===0 ? `<th>${escH(c)}</th>` : `<td>${escH(c)}</td>`).join("") + "</tr>").join("") + "</tbody></table>");
+  }
+  close();
+  return out.join("");
+}
+
+// toolbar
+try { document.execCommand("styleWithCSS", false, false); } catch(e){}
+let savedRange = null;
+document.addEventListener("selectionchange", ()=>{
+  const sel = getSelection();
+  if(sel.rangeCount && ed.contains(sel.anchorNode)){ savedRange = sel.getRangeAt(0).cloneRange(); syncToolbar(); }
+});
+function restoreSel(){
+  ed.focus();
+  if(savedRange && ed.contains(savedRange.startContainer)){ const s = getSelection(); s.removeAllRanges(); s.addRange(savedRange); }
+}
+function syncToolbar(){
+  document.querySelectorAll(".etools [data-state]").forEach(b=>{ let on = false; try { on = document.queryCommandState(b.dataset.cmd); } catch(e){} b.setAttribute("aria-pressed", on ? "true" : "false"); });
+  const sel = getSelection(); let n = sel.anchorNode; while(n && n !== ed && !(n.nodeType === 1 && /^(H1|H2|H3|P|DIV|LI)$/.test(n.tagName))) n = n.parentNode;
+  $("eBlock").value = n && n !== ed && /^H[123]$/.test(n.tagName) ? n.tagName.toLowerCase() : "p";
+}
+const cmd = (c, v) => { restoreSel(); try { document.execCommand(c, false, v == null ? null : v); } catch(e){} syncToolbar(); };
+document.querySelectorAll(".etools [data-cmd]").forEach(b=>{
+  b.addEventListener("mousedown", e=> e.preventDefault());
+  b.addEventListener("click", ()=> cmd(b.dataset.cmd));
+});
+$("eBlock").addEventListener("change", e=> cmd("formatBlock", "<" + e.target.value + ">"));
+const setBar = () => { $("eColorBar").style.background = $("eColor").value; };
+$("eColorBtn").addEventListener("mousedown", e=> e.preventDefault());
+$("eColorBtn").addEventListener("click", ()=> cmd("foreColor", $("eColor").value));
+$("eColor").addEventListener("input", setBar);
+$("eColor").addEventListener("change", ()=>{ setBar(); cmd("foreColor", $("eColor").value); });
+setBar();
+$("eTable").addEventListener("mousedown", e=> e.preventDefault());
+$("eTable").addEventListener("click", ()=>{
+  const head = "<tr><th>Column 1</th><th>Column 2</th><th>Column 3</th></tr>", row = "<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>";
+  cmd("insertHTML", `<table><tbody>${head}${row}${row}</tbody></table><p><br></p>`);
+});
+// paste: keep bold/italic/underline/colour, headings, lists and tables; drop everything else
+ed.addEventListener("paste", e=>{
+  const cd = e.clipboardData; if(!cd) return;
+  const html = cd.getData("text/html"), text = cd.getData("text/plain");
+  e.preventDefault();
+  if(html){
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    const blocks = editorToBlocks(doc.body);
+    const out = blocks.length === 1 && blocks[0].type === "p" ? runsHTML(blocks[0]) : blocksToHTML(blocks);
+    document.execCommand("insertHTML", false, out);
+  } else if(text){
+    document.execCommand("insertText", false, text);
+  }
+});
 
 /* ---------- reading a file from the device ---------- */
 const READ_LIBS = {
@@ -960,33 +1256,20 @@ async function readAnyFile(file){
   const ext = (file.name.split(".").pop() || "").toLowerCase();
   if(ext === "doc" || ext === "ppt") throw new Error(`old .${ext} files can't be read here. Save it as .${ext}x first, then try again.`);
   if(ext === "pdf") return readPdf(await file.arrayBuffer());
-  if(ext === "docx"){ await loadRead("mammoth"); const r = await window.mammoth.convertToHtml({arrayBuffer: await file.arrayBuffer()}); return htmlToBlocks(r.value); }
+  if(ext === "docx"){ await loadRead("mammoth"); const r = await window.mammoth.convertToHtml({arrayBuffer: await file.arrayBuffer()}); return editorToBlocks(new DOMParser().parseFromString(r.value, "text/html").body); }
   if(ext === "pptx") return readPptx(await file.arrayBuffer());
   if(["xlsx","xls","xlsm","ods","numbers"].includes(ext)) return readSheet(await file.arrayBuffer());
   const text = await file.text();
   if(ext === "csv" || ext === "tsv") return readSheet(new TextEncoder().encode(text).buffer);
-  if(ext === "html" || ext === "htm") return htmlToBlocks(text);
+  if(ext === "html" || ext === "htm") return editorToBlocks(new DOMParser().parseFromString(text, "text/html").body);
   if(ext === "json") return readJson(text);
   if(["txt","md","markdown","text",""].includes(ext) || file.type.startsWith("text/")) return parse(text);
   throw new Error(`.${ext} files aren't supported. Try PDF, Word, Excel, PowerPoint, CSV, text, Markdown or HTML.`);
 }
 
-// blocks → the editor's simple markup, so the file can be checked and edited before converting
-function blocksToMarkup(blocks){
-  const safe = s => String(s).replace(/\|/g, "│");
-  const out = []; let prev = null;
-  for(const b of blocks){
-    if(prev && (b.type === "h" || b.type === "table" || prev === "table" || (prev === "li" && b.type !== "li"))) out.push("");
-    if(b.type === "h") out.push("#".repeat(b.level) + " " + safe(b.text));
-    else if(b.type === "li") out.push("- " + safe(b.text));
-    else if(b.type === "p") out.push(safe(b.text).replace(/^([#\-*•])/, "​$1"));
-    else b.rows.forEach(r=>out.push(r.map(c=>safe(c) || " ").join(" | ")));
-    prev = b.type;
-  }
-  return out.join("\n");
-}
 
 var sourceFile = null;
+var lastFile = null;
 const prettyTitle = name => name.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim().replace(/\b\w/g, c=>c.toUpperCase());
 async function takeFile(file){
   if(!file) return;
@@ -997,10 +1280,11 @@ async function takeFile(file){
     if(!blocks.length) throw new Error("no text found in this file.");
     let title = prettyTitle(file.name);
     if(blocks.length > 1 && blocks[0].type === "h" && blocks[0].text.length < 140) title = blocks.shift().text;
-    $("body").value = blocksToMarkup(blocks);
+    $("body").innerHTML = blocksToHTML(blocks);
     $("title").value = title;
     $("fname").value = "";
-    sourceFile = file.name;
+    sourceFile = file.name; lastFile = file;
+    $("viewFile").hidden = !/\.pdf$/i.test(file.name);
     $("srcName").textContent = file.name;
     $("srcMeta").textContent = `${(file.size/1024).toFixed(file.size < 10240 ? 1 : 0)} KB · ${blocks.length} parts read`;
     zone.classList.add("loaded");
@@ -1017,7 +1301,7 @@ async function takeFile(file){
 }
 $("file").addEventListener("change", e=> takeFile(e.target.files && e.target.files[0]));
 $("clearFile").addEventListener("click", ()=>{
-  sourceFile = null; $("drop").classList.remove("loaded");
+  sourceFile = null; lastFile = null; $("viewFile").hidden = true; $("drop").classList.remove("loaded");
   $("srcName").textContent = "No file chosen"; $("srcMeta").textContent = "PDF, Word, Excel, PowerPoint, CSV, text, Markdown, HTML";
   setMakeLabel(); setStatus("");
 });
@@ -1029,19 +1313,157 @@ dropZone.addEventListener("drop", e=> takeFile(e.dataTransfer && e.dataTransfer.
 /* ---------- fonts ---------- */
 const FONT_STACK = {helvetica:"sans-serif", times:"serif", courier:"monospace"};
 function getStyle(){ const [font, pdf] = $("font").value.split("|"); return {font, pdf, scale:parseFloat($("size").value) || 1}; }
+function docColorHex(){ const v = $("docColor").value; return v === "custom" ? $("docColorCustom").value : v; }
+function mixWhite(hex, t){ const n = parseInt(hex.slice(1),16), r = n>>16&255, g = n>>8&255, b = n&255; const m = c => Math.round(c + (255-c)*t).toString(16).padStart(2,"0"); return (m(r)+m(g)+m(b)).toUpperCase(); }
+function docTheme(){
+  const hex = docColorHex(), H = hex.slice(1).toUpperCase(), mono = $("docColor").value === "#111111";
+  return mono
+    ? {h:"111111", rule:"111111", acc:"9A9A9A", fill:"EFEFEF", border:"C8C8C8", slideBg:"1C1C1C", slideText:"FFFFFF", slideSub:"CFCFCF"}
+    : {h:H, rule:H, acc:mixWhite(hex,.55), fill:mixWhite(hex,.88), border:mixWhite(hex,.7), slideBg:H, slideText:"FFFFFF", slideSub:mixWhite(hex,.65)};
+}
 function updateFontUI(){
   const st = getStyle(), pv = $("fontPreview");
+  const custom = $("docColor").value === "custom"; $("docColorCustom").hidden = !custom;
+  const th = docTheme(); $("pvHead").style.color = "#" + th.h; $("pvRule").style.background = "#" + th.rule;
+  const edEl = $("body"); edEl.style.fontFamily = `"${st.font}", ${FONT_STACK[st.pdf]}`; edEl.style.fontSize = (15*st.scale) + "px"; edEl.style.setProperty("--doccolor", "#" + th.h); edEl.style.setProperty("--docfill", "#" + th.fill);
   pv.style.fontFamily = `"${st.font}", ${FONT_STACK[st.pdf]}`;
   pv.style.fontSize = (18*st.scale) + "px";
   const row = $("fontRow"), note = $("fontNote");
   if(current === "pdf"){ row.classList.remove("off"); note.textContent = "PDF uses the closest built-in font: " + {helvetica:"Helvetica", times:"Times", courier:"Courier"}[st.pdf] + "."; }
   else if(current === "docx" || current === "pptx"){ row.classList.remove("off"); note.textContent = "The file uses " + st.font + ". It shows exactly on devices that have this font installed."; }
-  else { row.classList.add("off"); note.textContent = FORMATS[current].name + " files don't store fonts, so this setting is skipped."; }
-  try { localStorage.setItem("kd-font", $("font").value); localStorage.setItem("kd-size", $("size").value); } catch(e){}
+  else { row.classList.add("off"); note.textContent = FORMATS[current].name + " files don't store fonts or colours, so these settings are skipped."; }
+  try { localStorage.setItem("kd-font", $("font").value); localStorage.setItem("kd-size", $("size").value); localStorage.setItem("kd-color", $("docColor").value); localStorage.setItem("kd-color-custom", $("docColorCustom").value); } catch(e){}
 }
 try { const f = localStorage.getItem("kd-font"), z = localStorage.getItem("kd-size"); if(f && [...$("font").options].some(o=>o.value===f)) $("font").value = f; if(z && [...$("size").options].some(o=>o.value===z)) $("size").value = z; } catch(e){}
+try { const c = localStorage.getItem("kd-color"), cc = localStorage.getItem("kd-color-custom"); if(c && [...$("docColor").options].some(o=>o.value===c)) $("docColor").value = c; if(cc && /^#[0-9a-f]{6}$/i.test(cc)) $("docColorCustom").value = cc; } catch(e){}
 $("font").addEventListener("change", updateFontUI); $("size").addEventListener("change", updateFontUI);
+$("docColor").addEventListener("change", ()=>{ updateFontUI(); if($("docColor").value === "custom") try{ $("docColorCustom").click(); }catch(e){} });
+$("docColorCustom").addEventListener("input", updateFontUI);
 updateFontUI();
+
+/* ---------- PDF viewer ---------- */
+const VW = {pdf:null, zoom:1, fitW:1, boxes:[], tasks:new Map(), io:null, opts:{}, token:0};
+const vEl = $("viewer"), vPages = $("vPages");
+function vStatus(msg){ vPages.innerHTML = ""; const p = document.createElement("p"); p.className = "vmsg"; p.textContent = msg; vPages.appendChild(p); }
+async function openViewer(bytes, name, opts){
+  VW.opts = opts || {}; const my = ++VW.token;
+  $("vName").textContent = name;
+  $("vSave").hidden = !VW.opts.save; $("vConvert").hidden = !VW.opts.file;
+  vEl.hidden = false; document.body.style.overflow = "hidden";
+  vStatus("Opening " + name + "…");
+  $("vClose").focus();
+  try{
+    await loadRead("pdfwork"); await loadRead("pdfjs");
+    if(VW.pdf){ try{ VW.pdf.destroy(); }catch(e){} VW.pdf = null; }
+    const pdf = await window.pdfjsLib.getDocument({data:new Uint8Array(bytes.slice(0)), isEvalSupported:false}).promise;
+    if(my !== VW.token) return;
+    VW.pdf = pdf; VW.zoom = 1;
+    const first = await pdf.getPage(1);
+    VW.baseW = first.getViewport({scale:1}).width;
+    VW.sizes = [];
+    for(let i=1;i<=pdf.numPages;i++){ const pg = i===1 ? first : await pdf.getPage(i); const v = pg.getViewport({scale:1}); VW.sizes.push([v.width, v.height]); }
+    if(my !== VW.token) return;
+    layoutPages();
+  }catch(err){
+    console.error(err);
+    const pw = err && err.name === "PasswordException";
+    vStatus(pw ? "This PDF is password-protected, so it can't be shown here." : "Could not open this PDF: " + (err && err.message || "the file may be damaged."));
+  }
+}
+function currentScale(){ return VW.fitW * VW.zoom; }
+function layoutPages(keepRatio){
+  if(!VW.pdf) return;
+  const ratio = keepRatio ? vPages.scrollTop / Math.max(1, vPages.scrollHeight) : 0;
+  VW.tasks.forEach(t=>{ try{ t.cancel(); }catch(e){} }); VW.tasks.clear();
+  if(VW.io) VW.io.disconnect();
+  const avail = Math.max(200, vPages.clientWidth - 24);
+  VW.fitW = avail / VW.baseW;
+  const sc = currentScale();
+  vPages.innerHTML = ""; VW.boxes = [];
+  VW.io = new IntersectionObserver(entries=>{ entries.forEach(en=>{ if(en.isIntersecting) renderPage(+en.target.dataset.n); }); }, {root:vPages, rootMargin:"800px 0px"});
+  VW.sizes.forEach(([w,h], i)=>{
+    const box = document.createElement("div"); box.className = "vbox"; box.dataset.n = i+1;
+    box.style.width = Math.floor(w*sc) + "px"; box.style.height = Math.floor(h*sc) + "px";
+    box.setAttribute("aria-label", "Page " + (i+1));
+    vPages.appendChild(box); VW.boxes.push(box); VW.io.observe(box);
+  });
+  $("vZoomLbl").textContent = Math.round(VW.zoom*100) + "%";
+  if(keepRatio) vPages.scrollTop = ratio * vPages.scrollHeight;
+  updatePageNum();
+}
+async function renderPage(n){
+  const box = VW.boxes[n-1]; if(!box || box.dataset.done || VW.tasks.has(n)) return;
+  const sc = currentScale(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+  try{
+    const page = await VW.pdf.getPage(n);
+    const v = page.getViewport({scale: sc*dpr});
+    const c = document.createElement("canvas"); c.width = Math.floor(v.width); c.height = Math.floor(v.height);
+    const task = page.render({canvasContext:c.getContext("2d"), viewport:v});
+    VW.tasks.set(n, task);
+    await task.promise;
+    VW.tasks.delete(n);
+    if(VW.boxes[n-1] !== box) return;
+    box.innerHTML = ""; box.appendChild(c); box.dataset.done = "1";
+  }catch(e){ VW.tasks.delete(n); }
+}
+function updatePageNum(){
+  if(!VW.boxes.length) return;
+  const mid = vPages.scrollTop + vPages.clientHeight*0.35; let cur = 1;
+  for(const b of VW.boxes){ if(b.offsetTop <= mid) cur = +b.dataset.n; else break; }
+  $("vNum").textContent = cur + " / " + VW.boxes.length;
+  $("vPrev").disabled = cur <= 1; $("vNext").disabled = cur >= VW.boxes.length;
+  VW.cur = cur;
+}
+function goPage(n){ const b = VW.boxes[n-1]; if(b) vPages.scrollTo({top:b.offsetTop - 12, behavior: reduceMotion ? "auto" : "smooth"}); }
+function closeViewer(){
+  vEl.hidden = true; document.body.style.overflow = ""; VW.token++;
+  VW.tasks.forEach(t=>{ try{ t.cancel(); }catch(e){} }); VW.tasks.clear();
+  if(VW.io) VW.io.disconnect();
+  if(VW.pdf){ try{ VW.pdf.destroy(); }catch(e){} VW.pdf = null; }
+  vPages.innerHTML = "";
+}
+vPages.addEventListener("scroll", ()=> requestAnimationFrame(updatePageNum), {passive:true});
+$("vPrev").addEventListener("click", ()=> goPage((VW.cur||1) - 1));
+$("vNext").addEventListener("click", ()=> goPage((VW.cur||1) + 1));
+$("vIn").addEventListener("click", ()=>{ VW.zoom = Math.min(4, VW.zoom*1.25); layoutPages(true); });
+$("vOut").addEventListener("click", ()=>{ VW.zoom = Math.max(0.4, VW.zoom/1.25); layoutPages(true); });
+$("vFit").addEventListener("click", ()=>{ VW.zoom = 1; layoutPages(true); });
+$("vClose").addEventListener("click", closeViewer);
+$("vSave").addEventListener("click", async ()=>{
+  const s = VW.opts.save; if(!s) return;
+  const r = await saveFile(s.filename, s.data);
+  const btn = $("vSave"); btn.textContent = r.ok ? "Saved" : "Save"; setTimeout(()=>{ btn.textContent = "Save"; }, 2000);
+  if(!r.ok && r.msg) setStatus(r.msg, "err"); else if(r.ok) setStatus("Saved " + s.filename, "ok");
+});
+$("vConvert").addEventListener("click", ()=>{ const f = VW.opts.file; closeViewer(); if(f){ takeFile(f); $("form").scrollIntoView({behavior: reduceMotion ? "auto" : "smooth"}); } });
+addEventListener("keydown", e=>{
+  if(vEl.hidden) return;
+  if(e.key === "Escape") closeViewer();
+  else if((e.key === "ArrowRight" || e.key === "PageDown") && !e.target.closest("input,select,textarea")){ e.preventDefault(); goPage((VW.cur||1)+1); }
+  else if((e.key === "ArrowLeft" || e.key === "PageUp") && !e.target.closest("input,select,textarea")){ e.preventDefault(); goPage((VW.cur||1)-1); }
+  else if((e.ctrlKey || e.metaKey) && (e.key === "=" || e.key === "+")){ e.preventDefault(); $("vIn").click(); }
+  else if((e.ctrlKey || e.metaKey) && e.key === "-"){ e.preventDefault(); $("vOut").click(); }
+});
+let vResizeT; addEventListener("resize", ()=>{ if(vEl.hidden) return; clearTimeout(vResizeT); vResizeT = setTimeout(()=>layoutPages(true), 200); });
+
+// open a PDF from the device
+async function viewPdfFile(file){
+  if(!file) return;
+  if(!/\.pdf$/i.test(file.name) && file.type !== "application/pdf"){ setStatus(file.name + " is not a PDF. The viewer opens PDF files only.", "err"); return; }
+  openViewer(await file.arrayBuffer(), file.name, {file});
+}
+$("vFile").addEventListener("change", e=>{ viewPdfFile(e.target.files && e.target.files[0]); e.target.value = ""; });
+$("viewFile").addEventListener("click", ()=>{ if(lastFile) viewPdfFile(lastFile); });
+
+// preview the PDF that would be made, before saving it
+$("preview").addEventListener("click", async ()=>{
+  const btn = $("preview"); btn.disabled = true; btn.textContent = "Preparing…";
+  try{
+    const job = await buildCurrent("pdf");
+    openViewer(await job.data.arrayBuffer(), job.filename, {save:{filename:job.filename, data:job.data}});
+  }catch(err){ console.error(err); setStatus("Could not make the preview: " + (err && err.message || "unknown error"), "err"); }
+  finally{ btn.disabled = false; btn.textContent = "Preview"; }
+});
 
 /* ---------- saving ---------- */
 let dlPromise = null;
@@ -1079,18 +1501,24 @@ async function saveFile(filename, data){
   return {ok:true};
 }
 
+async function buildCurrent(forceKey){
+  const key = forceKey || current, f = FORMATS[key];
+  const title = $("title").value.trim() || "Untitled document";
+  const d = {title, author:$("author").value.trim(), date:today(), blocks:editorToBlocks($("body")), style:getStyle(), theme:docTheme()};
+  const filename = slug($("fname").value.trim() || title) + "." + f.ext;
+  await loadLib(key);
+  let data = await BUILD[key](d);
+  if(!(data instanceof Blob) && key === "pdf") data = new Blob([data], {type:"application/pdf"});
+  return {data, filename, f};
+}
 $("form").addEventListener("submit", async e=>{
   e.preventDefault();
-  const key = current, f = FORMATS[key], btn = $("make");
-  const title = $("title").value.trim() || "Untitled document";
-  const d = {title, author:$("author").value.trim(), date:today(), blocks:parse($("body").value), style:getStyle(), theme:SCHEMES[schemeKey].doc};
-  const filename = slug($("fname").value.trim() || title) + "." + f.ext;
+  const f = FORMATS[current], btn = $("make");
   btn.disabled = true; btn.textContent = (sourceFile ? "Converting to " : "Making ") + f.label + "…"; setStatus("");
   try{
-    await loadLib(key);
-    const data = await BUILD[key](d);
-    const r = await saveFile(filename, data);
-    r.ok ? setStatus("Saved " + filename, "ok") : setStatus(r.msg, "err");
+    const job = await buildCurrent();
+    const r = await saveFile(job.filename, job.data);
+    r.ok ? setStatus("Saved " + job.filename, "ok") : setStatus(r.msg, "err");
   }catch(err){
     console.error(err);
     setStatus("Could not make the " + f.label + ": " + (err && err.message || "unknown error"), "err");
